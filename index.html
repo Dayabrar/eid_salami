@@ -8,9 +8,9 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: linear-gradient(135deg, #1a0a2e, #16213e, #0f3460);
+      background: radial-gradient(circle at center, #1b1b2f, #000000);
       min-height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -20,553 +20,270 @@
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.3rem;
+      font-size: 2.8rem;
+      margin-bottom: 0.2rem;
       text-align: center;
-      background: linear-gradient(to right, #f7c948, #ff6b6b, #f7c948);
+      background: linear-gradient(45deg, #f7c948, #ffffff, #f7c948);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shimmer 2s infinite;
+      text-shadow: 0 0 20px rgba(247, 201, 72, 0.3);
     }
 
-    @keyframes shimmer {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.4); }
-    }
+    .subtitle { color: #888; margin-bottom: 2rem; font-size: 1rem; text-align: center; max-width: 80%; }
 
-    .subtitle { color: #aaa; margin-bottom: 2rem; font-size: 1rem; text-align: center; }
-
-    .wheel-container {
+    /* The Wheel Container with Glow */
+    .wheel-outer {
       position: relative;
-      width: 340px; height: 340px;
-      margin-bottom: 1.5rem;
+      padding: 12px;
+      background: #222;
+      border-radius: 50%;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.1);
+      border: 4px solid #333;
     }
 
-    canvas { border-radius: 50%; box-shadow: 0 0 40px rgba(247,201,72,0.4); }
+    .wheel-container { position: relative; width: 340px; height: 340px; }
+
+    canvas { border-radius: 50%; }
 
     .pointer {
       position: absolute;
-      top: -18px; left: 50%;
+      top: -15px; left: 50%;
       transform: translateX(-50%);
       width: 0; height: 0;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-      border-top: 32px solid #f7c948;
-      filter: drop-shadow(0 2px 6px rgba(247,201,72,0.7));
-      z-index: 10;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 35px solid #f7c948;
+      filter: drop-shadow(0 0 10px #f7c948);
+      z-index: 100;
     }
 
     #spinBtn {
+      margin-top: 2rem;
       padding: 1rem 3rem;
       font-size: 1.3rem;
-      font-weight: bold;
+      font-weight: 900;
+      text-transform: uppercase;
       background: linear-gradient(135deg, #f7c948, #ff6b6b);
       border: none;
       border-radius: 50px;
       cursor: pointer;
       color: white;
-      box-shadow: 0 6px 25px rgba(247,201,72,0.4);
-      transition: transform 0.1s, box-shadow 0.1s;
-      letter-spacing: 1px;
+      box-shadow: 0 5px 20px rgba(247, 201, 72, 0.4);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    #spinBtn:hover { transform: scale(1.05); }
-    #spinBtn:active { transform: scale(0.97); }
-    #spinBtn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    #spinBtn:hover:not(:disabled) { transform: scale(1.1); box-shadow: 0 8px 30px rgba(247, 201, 72, 0.6); }
+    #spinBtn:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
 
     #result {
-      margin-top: 1.5rem;
+      margin-top: 1.2rem;
       font-size: 1.1rem;
-      text-align: center;
-      min-height: 3rem;
-      max-width: 360px;
-      padding: 0 1rem;
-      color: #f7c948;
       font-style: italic;
-      opacity: 0;
-      transition: opacity 0.5s;
+      height: 2.5rem;
+      text-align: center;
+      color: #f7c948;
     }
 
     #redeemBtn {
       display: none;
-      margin-top: 1rem;
-      padding: 0.7rem 2rem;
-      font-size: 1rem;
+      margin-top: 0.5rem;
+      padding: 0.8rem 2.2rem;
+      background: #43e97b;
+      color: #000;
       font-weight: bold;
-      background: linear-gradient(135deg, #43e97b, #38f9d7);
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      color: #111;
-      box-shadow: 0 4px 15px rgba(67,233,123,0.4);
-      transition: transform 0.1s;
+      animation: pulse 1.5s infinite;
     }
-    #redeemBtn:hover { transform: scale(1.05); }
+
+    .debt-counter { margin-top: 1rem; font-size: 0.8rem; color: #555; }
 
     /* Modal */
-    #modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.88);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding: 1rem;
-    }
+    #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     #modal.show { display: flex; }
+    .modal-box { background: #111; border: 2px solid #f7c948; padding: 2rem; border-radius: 20px; text-align: center; max-width: 420px; width: 100%; box-shadow: 0 0 40px rgba(247,201,72,0.2); }
+    
+    #modalMemeImg { width: 100%; max-height: 250px; object-fit: contain; margin-bottom: 1rem; border-radius: 10px; display: none; }
+    .yt-wrapper { display: none; position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 1rem; border-radius: 10px; overflow: hidden; }
+    .yt-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-    .modal-box {
-      background: linear-gradient(135deg, #1a0a2e, #0f3460);
-      border: 2px solid #f7c948;
-      border-radius: 20px;
-      padding: 2rem 1.5rem;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 0 60px rgba(247,201,72,0.3);
-      animation: popIn 0.4s ease;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(67, 233, 123, 0); } 100% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0); } }
+    .shake { animation: shake 0.4s ease-in-out; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
-    @keyframes popIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      80% { transform: scale(1.05); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .modal-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
-    .modal-title { font-size: 1.4rem; font-weight: bold; color: #f7c948; margin-bottom: 0.8rem; }
-
-    /* Image meme */
-    #modalMemeImg {
-      width: 100%;
-      max-height: 220px;
-      object-fit: contain;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-      display: none;
-      border: 2px solid rgba(247,201,72,0.3);
-    }
-
-    /* YouTube embed */
-    .yt-wrapper {
-      display: none;
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      margin-bottom: 1rem;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 2px solid rgba(247,201,72,0.3);
-    }
-    .yt-wrapper iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border: none;
-    }
-
-    /* YouTube link button (opens in new tab) */
-    #ytLinkBtn {
-      display: none;
-      margin-bottom: 1rem;
-      padding: 0.7rem 1.5rem;
-      background: linear-gradient(135deg, #ff0000, #cc0000);
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 4px 15px rgba(255,0,0,0.4);
-      transition: transform 0.1s;
-    }
-    #ytLinkBtn:hover { transform: scale(1.05); }
-
-    .modal-msg { font-size: 0.95rem; color: #ccc; line-height: 1.5; margin-bottom: 1.5rem; }
-    .meme-loading { color: #aaa; font-size: 0.85rem; margin-bottom: 0.5rem; font-style: italic; }
-
-    #closeModal {
-      padding: 0.6rem 2rem;
-      background: #f7c948;
-      border: none;
-      border-radius: 50px;
-      font-weight: bold;
-      cursor: pointer;
-      color: #111;
-      font-size: 1rem;
-    }
-
-    .stars {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none; z-index: -1;
-    }
+    #closeModal { margin-top: 1rem; padding: 10px 30px; border-radius: 20px; border: none; cursor:pointer; background:#f7c948; font-weight: bold; }
   </style>
 </head>
 <body>
 
-<canvas class="stars" id="stars"></canvas>
+  <h1>🎉 EID SALAMI 🎉</h1>
+  <p class="subtitle" id="subText">Win big or lose with style. 🌙</p>
 
-  <h1>🎉 Eid Salami 🎉</h1>
-  <p class="subtitle">Spin the wheel. Win big. (Spoiler: you won't.)</p>
-
-  <div class="wheel-container">
+  <div class="wheel-outer" id="mainStage">
     <div class="pointer"></div>
-    <canvas id="wheelCanvas" width="340" height="340"></canvas>
+    <div class="wheel-container">
+      <canvas id="wheelCanvas" width="340" height="340"></canvas>
+    </div>
   </div>
 
-  <button id="spinBtn">🎰 SPIN!</button>
+  <button id="spinBtn">🎰 SPIN FOR CASH</button>
   <div id="result"></div>
-  <button id="redeemBtn">💰 Redeem Now!</button>
+  <button id="redeemBtn">💰 CLAIM WINNINGS</button>
+  
+  <p class="debt-counter" id="debtText">Spins wasted: 0</p>
 
   <div id="modal">
     <div class="modal-box">
-      <div class="modal-emoji" id="modalEmoji"></div>
-      <div class="modal-title" id="modalTitle"></div>
-      <div class="meme-loading" id="memeLoading"></div>
-
+      <div id="modalEmoji" style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
+      <h2 style="color:#f7c948; margin-bottom: 1rem;" id="modalTitle"></h2>
+      <div id="memeLoading" style="font-size: 0.8rem; color:#888;"></div>
       <img id="modalMemeImg" alt="meme" />
-
       <div class="yt-wrapper" id="ytWrapper">
-        <iframe id="ytFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        <iframe id="ytFrame" allow="autoplay; encrypted-media"></iframe>
       </div>
-
-      <button id="ytLinkBtn" onclick="">▶️ Watch on YouTube</button>
-
-      <div class="modal-msg" id="modalMsg"></div>
-      <button id="closeModal">Cry Again 😢</button>
+      <p id="modalMsg" style="margin-bottom: 1.5rem; color: #ccc; font-size: 0.95rem;"></p>
+      <button id="closeModal">Cry & Try Again</button>
     </div>
   </div>
 
   <script>
-    // ============================================================
-    //  WHEEL SEGMENTS
-    // ============================================================
     const segments = [
-      { label: "0৳",    color: "#e74c3c", zero: true  },
-      { label: "10৳",   color: "#3498db", zero: false },
-      { label: "0৳",    color: "#e74c3c", zero: true  },
-      { label: "100৳",  color: "#2ecc71", zero: false },
-      { label: "0৳",    color: "#e74c3c", zero: true  },
-      { label: "500৳",  color: "#9b59b6", zero: false },
-      { label: "0৳",    color: "#e74c3c", zero: true  },
+      { label: "0৳", color: "#e74c3c", zero: true },
+      { label: "10৳", color: "#3498db", zero: false },
+      { label: "0৳", color: "#e74c3c", zero: true },
+      { label: "100৳", color: "#2ecc71", zero: false },
+      { label: "0৳", color: "#e74c3c", zero: true },
+      { label: "500৳", color: "#9b59b6", zero: false },
+      { label: "0৳", color: "#e74c3c", zero: true },
       { label: "1000৳", color: "#f39c12", zero: false },
-      { label: "0৳",    color: "#e74c3c", zero: true  },
-      { label: "50৳",   color: "#1abc9c", zero: false },
-      { label: "0৳",    color: "#e74c3c", zero: true  },
+      { label: "0৳", color: "#e74c3c", zero: true },
+      { label: "50৳", color: "#1abc9c", zero: false },
+      { label: "0৳", color: "#e74c3c", zero: true },
       { label: "5000৳", color: "#e67e22", zero: false },
     ];
 
-    // ============================================================
-    //  55 SARCASTIC ZERO MESSAGES
-    // ============================================================
-    const zeroMessages = [
-      "Congratulations! You won... nothing. As expected. 🎉",
-      "Zero taka! The universe is aligned with your luck. 🌌",
-      "Wow, zero again! You're a natural at losing. 👏",
-      "0৳ — The only amount your ancestors left for you. 😂",
-      "Shocking result! You got zero. Nobody saw this coming. 😐",
-      "The wheel has spoken. It said: 'Nope.'",
-      "Zero! But hey, at least you have your health... probably. 🏥",
-      "You spun, you lost. Eid Mubarak! 🌙",
-      "The wheel pities you. It gave you zero as a mercy. 🙏",
-      "Zero taka. Your bank account sends its condolences. 💸",
-      "Incredible spin! You successfully won nothing. Bravo. 🎭",
-      "You matched your savings account perfectly. Zero. 📉",
-      "The algorithm was rigged... oh wait, it's just your luck. 💀",
-      "Zero! This app has more money than your winnings. 🤑",
-      "Zero taka. Try again? (It'll still be zero.) 🔄",
-      "Your ancestors are watching. They're shaking their heads. 👴",
-      "Zero. Even the wheel felt bad for you... for 0.3 seconds. ⏱️",
-      "You got 0৳! That's technically infinite percent of nothing. 🧮",
-      "Plot twist: You won zero. Nobody is surprised. 📺",
-      "Zero taka! Collect your prize at the nearest void. 🕳️",
-      "The wheel wanted to give you more. But it also didn't. 🤷",
-      "Zero again? You must be a professional at this. 🏆",
-      "0৳ — Proof that hope is just a scam. 📜",
-      "Congrats! You've successfully wasted everyone's time. 🎊",
-      "Zero. Your Eid salami is in another castle. 🏰",
-      "The wheel respects your consistency. Always zero. 📊",
-      "You got zero! Same as your WiFi signal. 📶",
-      "Zero taka! Call your uncle instead. He might help. 📞",
-      "The wheel says: 'Main character? No. Zero character? Yes.' 🎬",
-      "Zero! Even the cricket team scores more. 🏏",
-      "Your spin was beautiful. Your result was not. 🌹",
-      "Zero taka — The most consistent part of your life. 📆",
-      "You asked the wheel for money. The wheel said LOL. 😆",
-      "Zero! At this rate, you'll retire on air. 💨",
-      "The wheel took one look at your luck and chose chaos. 🌀",
-      "Zero. The wheel has judged you and found you... sufficient. 😑",
-      "0৳! Don't worry, money is overrated anyway. (It's not.) 💰",
-      "The wheel: a mirror of your financial future. 🪞",
-      "Zero taka. Your optimism was cute though. 🌸",
-      "You and zero have a very stable relationship. 💑",
-      "Zero! The wheel is honest even when life isn't. 🧿",
-      "Spinning complete. Winning: not complete. 🚫",
-      "Zero taka — your net worth after this spin: unchanged. 😐",
-      "The wheel thought about giving you money. Then it didn't. 🤔",
-      "0৳! You qualified for nothing. Wear it with pride. 🎖️",
-      "Zero. But the real treasure was the friends you... also don't have. 😢",
-      "Another zero. Your luck is impressively bad. 🌟",
-      "The wheel respects your dedication to losing. 🫡",
-      "Zero taka! Your Eid bonus has been deposited... in our hearts. ❤️",
-      "You spun the wheel of destiny. Destiny said no. 🛑",
-      "Zero! On the bright side, you can't lose what you never had. ✨",
-      "The wheel gave you exactly what you deserved. Zero. 🧘",
-      "0৳ — Brought to you by the letter Z and the number 0. 🔤",
-      "Zero taka! Please try again. (Still zero.) 🔁",
-      "Congratulations on participating! That's literally all. 🏅",
+    const zeroRoasts = [
+      "Zero! Even the air is more valuable than your luck. 💨",
+      "Congratulations! You won... a lesson in humility. 🎓",
+      "0৳. Your wallet just sighed in relief. 💸",
+      "The wheel says: 'Go ask your Dad.' 👨‍🦳",
+      "A perfect zero! You're consistent, I'll give you that. 🎯"
     ];
 
-    // ============================================================
-    //  REDEEM TEXT RESPONSES
-    // ============================================================
-    const redeemTexts = [
-      { emoji: "😂", title: "Nice Try, Brother!",         msg: "The bank is currently closed. Permanently. For you specifically." },
-      { emoji: "🤣", title: "Redeeming... Please Wait...", msg: "Error 404: Money Not Found. Have you tried crying?" },
-      { emoji: "💀", title: "Transaction Failed!",         msg: "Your request has been reviewed and respectfully yeeted into the void." },
-      { emoji: "🫠", title: "Interesting Strategy!",       msg: "We forwarded your request to our finance team. They laughed." },
-      { emoji: "🙅", title: "Access Denied!",              msg: "This feature is available to winners only. Come back never." },
-      { emoji: "😭", title: "Payment Processing...",       msg: "Just kidding. There's no payment. There never was. Eid Mubarak! 🌙" },
-      { emoji: "🤡", title: "You Actually Clicked It!",    msg: "The real Eid salami was the hope we destroyed along the way." },
-      { emoji: "🎪", title: "Welcome to the Circus!",      msg: "You're the main attraction. Zero is the ringmaster." },
-      { emoji: "🪄", title: "Magic Trick!",                msg: "Watch closely... your money disappeared! (It was never there.)" },
-      { emoji: "📵", title: "Transaction Blocked!",        msg: "Our system detected that you are you. Request rejected automatically." },
+    const redeemFails = [
+      { emoji: "🤡", title: "Honk Honk!", msg: "You actually thought we had money? We're an AI, we live on electricity and your tears." },
+      { emoji: "🚫", title: "Access Denied", msg: "Our system detected that you haven't been nice this year. No Salami for you!" },
+      { emoji: "📉", title: "Stock Market Crash", msg: "Just as you won, the value of the Taka hit zero. Unlucky!" }
     ];
 
-    // ============================================================
-    //  YOUTUBE HELPER — extract video ID from any YouTube URL
-    // ============================================================
-    function getYouTubeID(url) {
-      const patterns = [
-        /youtu\.be\/([^?&]+)/,
-        /youtube\.com\/watch\?v=([^&]+)/,
-        /youtube\.com\/embed\/([^?&]+)/,
-        /youtube\.com\/shorts\/([^?&]+)/,
-      ];
-      for (const p of patterns) {
-        const m = url.match(p);
-        if (m) return m[1];
-      }
-      return null;
-    }
-
-    // ============================================================
-    //  LOAD MEME/LINK LIST FROM memes/list.json
-    // ============================================================
+    let spinCount = 0;
     let mediaItems = [];
+    fetch('memes/list.json').then(r => r.json()).then(l => mediaItems = l).catch(() => {});
 
-    fetch('memes/list.json')
-      .then(r => r.json())
-      .then(list => { mediaItems = list; })
-      .catch(() => { mediaItems = []; });
-
-    function getRandomMedia() {
-      if (mediaItems.length === 0) return null;
-      return mediaItems[Math.floor(Math.random() * mediaItems.length)];
-    }
-
-    // ============================================================
-    //  STARS BACKGROUND
-    // ============================================================
-    const starsCanvas = document.getElementById('stars');
-    const sCtx = starsCanvas.getContext('2d');
-    starsCanvas.width = window.innerWidth;
-    starsCanvas.height = window.innerHeight;
-    for (let i = 0; i < 150; i++) {
-      sCtx.beginPath();
-      sCtx.arc(Math.random() * starsCanvas.width, Math.random() * starsCanvas.height, Math.random() * 2, 0, Math.PI * 2);
-      sCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.7 + 0.1})`;
-      sCtx.fill();
-    }
-
-    // ============================================================
-    //  WHEEL DRAWING
-    // ============================================================
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
-    const cx = canvas.width / 2, cy = canvas.height / 2, r = cx - 10;
     const arc = (2 * Math.PI) / segments.length;
-    let currentAngle = 0, spinning = false;
+    let currentAngle = 0;
 
-    function drawWheel(rotation) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      segments.forEach((seg, i) => {
-        const start = rotation + i * arc, end = start + arc;
+    function drawWheel() {
+      ctx.clearRect(0,0,340,340);
+      segments.forEach((s, i) => {
+        const ang = currentAngle + i * arc;
         ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, r, start, end);
-        ctx.fillStyle = seg.color;
+        ctx.fillStyle = s.color;
+        ctx.moveTo(170, 170);
+        ctx.arc(170, 170, 165, ang, ang + arc);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(0,0,0,0.2)";
         ctx.stroke();
+
         ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(start + arc / 2);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = 'white';
-        ctx.font = `bold ${seg.zero ? 14 : 12}px Segoe UI`;
-        ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        ctx.shadowBlur = 4;
-        ctx.fillText(seg.label, r - 12, 5);
+        ctx.translate(170, 170);
+        ctx.rotate(ang + arc/2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "white";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText(s.label, 155, 5);
         ctx.restore();
       });
-      ctx.beginPath();
-      ctx.arc(cx, cy, 22, 0, Math.PI * 2);
-      ctx.fillStyle = '#1a0a2e';
-      ctx.fill();
-      ctx.strokeStyle = '#f7c948';
-      ctx.lineWidth = 3;
-      ctx.stroke();
     }
 
-    drawWheel(0);
+    drawWheel();
 
-    // ============================================================
-    //  SPIN LOGIC
-    // ============================================================
-    const spinBtn   = document.getElementById('spinBtn');
-    const resultDiv = document.getElementById('result');
-    const redeemBtn = document.getElementById('redeemBtn');
+    document.getElementById('spinBtn').onclick = function() {
+      spinCount++;
+      this.disabled = true;
+      document.getElementById('result').textContent = "";
+      document.getElementById('redeemBtn').style.display = "none";
+      document.getElementById('debtText').textContent = `Spins wasted: ${spinCount}`;
 
-    spinBtn.addEventListener('click', () => {
-      if (spinning) return;
-      spinning = true;
-      resultDiv.style.opacity = 0;
-      redeemBtn.style.display = 'none';
-      spinBtn.disabled = true;
+      // 55% Zero Probability
+      const isZero = Math.random() < 0.55;
+      const pool = segments.map((s,i) => s.zero === isZero ? i : -1).filter(i => i !== -1);
+      const chosen = pool[Math.floor(Math.random() * pool.length)];
 
-      // UPDATE: 40% zero, 60% non-zero chance! 
-      const zeroIndices    = segments.map((s,i) => s.zero  ? i : -1).filter(i => i >= 0);
-      const nonZeroIndices = segments.map((s,i) => !s.zero ? i : -1).filter(i => i >= 0);
-      const chosenIndex = Math.random() < 0.40
-        ? zeroIndices[Math.floor(Math.random() * zeroIndices.length)]
-        : nonZeroIndices[Math.floor(Math.random() * nonZeroIndices.length)];
+      // Near-Miss Logic (lands closer to the edges of the segment)
+      const offset = isZero ? (Math.random() < 0.5 ? 0.1 : 0.9) : 0.5;
+      const targetRot = (3 * Math.PI / 2) - (chosen * arc + (arc * offset));
+      const finalRot = targetRot + (Math.PI * 2 * 8);
 
-      // Angle of the chosen segment's middle
-      const segmentMiddle = chosenIndex * arc + arc / 2;
+      const start = performance.now();
+      const duration = 4500;
 
-      // Target wheel rotation so that segmentMiddle points exactly to the top (angle -PI/2)
-      let targetAngle = (3 * Math.PI / 2 - segmentMiddle + 2 * Math.PI) % (2 * Math.PI);
-
-      // Compute minimal rotation from currentAngle to targetAngle
-      let delta = (targetAngle - currentAngle + 2 * Math.PI) % (2 * Math.PI);
-
-      // Add full 360-degree spins
-      const extraSpins = Math.floor(5 + Math.random() * 5);
-      const fullTurns = 2 * Math.PI * extraSpins;
-      const totalRotation = delta + fullTurns;
-
-      const duration = 4000 + Math.random() * 1500;
-      const startTime = performance.now();
-      const startAngle = currentAngle;
-
-      function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
-
-      function animate(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        currentAngle = startAngle + totalRotation * easeOut(progress);
-        drawWheel(currentAngle);
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          // Snap to exact final angle modulo 2PI to avoid floating drift
-          currentAngle = (startAngle + totalRotation) % (2 * Math.PI);
-          drawWheel(currentAngle);
-          spinning = false;
-          spinBtn.disabled = false;
-          showResult(chosenIndex);
+      function frame(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 4);
+        currentAngle = ease * finalRot;
+        drawWheel();
+        if (p < 1) requestAnimationFrame(frame);
+        else {
+          document.getElementById('spinBtn').disabled = false;
+          const res = segments[chosen];
+          if (res.zero) {
+            document.getElementById('mainStage').classList.add('shake');
+            setTimeout(() => document.getElementById('mainStage').classList.remove('shake'), 400);
+            document.getElementById('result').textContent = zeroRoasts[Math.floor(Math.random() * zeroRoasts.length)];
+            document.getElementById('result').style.color = "#ff6b6b";
+          } else {
+            document.getElementById('result').textContent = `💸 Landed on ${res.label}! 💸`;
+            document.getElementById('result').style.color = "#43e97b";
+            document.getElementById('redeemBtn').style.display = "inline-block";
+          }
         }
       }
+      requestAnimationFrame(frame);
+    };
 
-      requestAnimationFrame(animate);
-    });
+    document.getElementById('redeemBtn').onclick = function() {
+      const fail = redeemFails[Math.floor(Math.random() * redeemFails.length)];
+      const media = mediaItems.length ? mediaItems[Math.floor(Math.random() * mediaItems.length)] : null;
 
-    function showResult(index) {
-      const seg = segments[index];
-      resultDiv.style.opacity = 1;
-      if (seg.zero) {
-        resultDiv.textContent = zeroMessages[Math.floor(Math.random() * zeroMessages.length)];
-        redeemBtn.style.display = 'none';
-      } else {
-        resultDiv.textContent = `🤩 You landed on ${seg.label}!! Want to redeem it?`;
-        redeemBtn.style.display = 'inline-block';
-      }
-    }
-
-    // ============================================================
-    //  REDEEM — show meme image OR YouTube
-    // ============================================================
-    redeemBtn.addEventListener('click', () => {
-      const text  = redeemTexts[Math.floor(Math.random() * redeemTexts.length)];
-      const media = getRandomMedia();
-
-      document.getElementById('modalEmoji').textContent = text.emoji;
-      document.getElementById('modalTitle').textContent = text.title;
-      document.getElementById('modalMsg').textContent   = text.msg;
-
-      // Reset all media elements
-      const memeImg   = document.getElementById('modalMemeImg');
-      const ytWrapper = document.getElementById('ytWrapper');
-      const ytFrame   = document.getElementById('ytFrame');
-      const ytLinkBtn = document.getElementById('ytLinkBtn');
-      const loading   = document.getElementById('memeLoading');
-
-      memeImg.style.display   = 'none';
-      ytWrapper.style.display = 'none';
-      ytLinkBtn.style.display = 'none';
-      loading.textContent     = '';
-      ytFrame.src             = '';
+      document.getElementById('modalEmoji').textContent = fail.emoji;
+      document.getElementById('modalTitle').textContent = fail.title;
+      document.getElementById('modalMsg').textContent = fail.msg;
+      
+      const img = document.getElementById('modalMemeImg');
+      const yt = document.getElementById('ytWrapper');
+      img.style.display = 'none';
+      yt.style.display = 'none';
 
       if (media) {
         if (media.type === 'image') {
-          // ── Show image/GIF ──
-          loading.textContent   = 'Loading your disappointment...';
-          memeImg.style.display = 'none';
-          memeImg.onload  = () => { loading.textContent = ''; memeImg.style.display = 'block'; };
-          memeImg.onerror = () => { loading.textContent = '(meme failed to load, just like your luck 💀)'; };
-          memeImg.src = 'memes/' + media.file;
-
+          img.src = 'memes/' + media.file;
+          img.style.display = 'block';
         } else if (media.type === 'youtube') {
-          // ── Embed YouTube OR show open-in-tab button ──
-          const videoID = getYouTubeID(media.url);
-          if (videoID) {
-            if (media.embed === false) {
-              // Open in new tab button
-              ytLinkBtn.style.display = 'inline-block';
-              ytLinkBtn.onclick = () => window.open(media.url, '_blank');
-              ytLinkBtn.textContent = (media.label || '▶️ Watch on YouTube');
-            } else {
-              // Embedded player (default)
-              ytWrapper.style.display = 'block';
-              ytFrame.src = `https://www.youtube.com/embed/${videoID}?autoplay=1&mute=0`;
-            }
-          }
-        } else if (media.type === 'link') {
-          // ── Any other link — open in new tab ──
-          ytLinkBtn.style.display = 'inline-block';
-          ytLinkBtn.style.background = 'linear-gradient(135deg, #f7c948, #ff6b6b)';
-          ytLinkBtn.onclick = () => window.open(media.url, '_blank');
-          ytLinkBtn.textContent = (media.label || '🔗 Click to claim your prize!');
+          const vid = media.url.split('v=')[1] || media.url.split('/').pop();
+          document.getElementById('ytFrame').src = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+          yt.style.display = 'block';
         }
       }
-
       document.getElementById('modal').classList.add('show');
-      redeemBtn.style.display = 'none';
-      resultDiv.textContent   = '💀 You tried to redeem. Big mistake.';
-    });
+    };
 
-    document.getElementById('closeModal').addEventListener('click', () => {
-      // Stop YouTube video when closing
-      document.getElementById('ytFrame').src = '';
+    document.getElementById('closeModal').onclick = () => {
+      document.getElementById('ytFrame').src = "";
       document.getElementById('modal').classList.remove('show');
-    });
+    };
   </script>
 </body>
 </html>

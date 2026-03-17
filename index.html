@@ -229,15 +229,12 @@
       <div class="modal-title" id="modalTitle"></div>
       <div class="meme-loading" id="memeLoading"></div>
 
-      <!-- Image meme -->
       <img id="modalMemeImg" alt="meme" />
 
-      <!-- YouTube embedded player -->
       <div class="yt-wrapper" id="ytWrapper">
         <iframe id="ytFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
       </div>
 
-      <!-- YouTube open-in-tab button -->
       <button id="ytLinkBtn" onclick="">▶️ Watch on YouTube</button>
 
       <div class="modal-msg" id="modalMsg"></div>
@@ -455,15 +452,14 @@
       const segmentMiddle = chosenIndex * arc + arc / 2;
 
       // Target wheel rotation so that segmentMiddle points exactly to the top (angle -PI/2)
-      // top direction in canvas is -PI/2, so we need finalAngle such that finalAngle + segmentMiddle ≡ -PI/2 (mod 2PI)
-      // => finalAngle ≡ -PI/2 - segmentMiddle (mod 2PI). Using positive representation: (3PI/2 - segmentMiddle) mod 2PI
       let targetAngle = (3 * Math.PI / 2 - segmentMiddle + 2 * Math.PI) % (2 * Math.PI);
 
       // Compute minimal rotation from currentAngle to targetAngle
       let delta = (targetAngle - currentAngle + 2 * Math.PI) % (2 * Math.PI);
 
-      // Add several full turns for spinning effect (at least 5, up to 10)
-      const fullTurns = 2 * Math.PI * (5 + Math.random() * 5);
+      // FIX: Use Math.floor() to ensure we are only adding full 360-degree spins!
+      const extraSpins = Math.floor(5 + Math.random() * 5);
+      const fullTurns = 2 * Math.PI * extraSpins;
       const totalRotation = delta + fullTurns;
 
       const duration = 4000 + Math.random() * 1500;

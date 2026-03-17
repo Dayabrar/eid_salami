@@ -20,7 +20,7 @@
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: clamp(2rem, 7vw, 3.5rem);
       margin-bottom: 0.3rem;
       text-align: center;
       background: linear-gradient(to right, #f7c948, #ff6b6b, #f7c948);
@@ -34,31 +34,44 @@
       50% { filter: brightness(1.4); }
     }
 
-    .subtitle { color: #aaa; margin-bottom: 2rem; font-size: 1rem; text-align: center; }
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 1.5rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      text-align: center;
+    }
 
     .wheel-container {
       position: relative;
-      width: 340px; height: 340px;
+      width: min(90vw, 340px);
+      aspect-ratio: 1 / 1;
       margin-bottom: 1.5rem;
     }
 
-    canvas { border-radius: 50%; box-shadow: 0 0 40px rgba(247,201,72,0.4); }
+    canvas {
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(247,201,72,0.4);
+      width: 100%;
+      height: 100%;
+    }
 
     .pointer {
       position: absolute;
-      top: -18px; left: 50%;
+      top: -20px;
+      left: 50%;
       transform: translateX(-50%);
-      width: 0; height: 0;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-      border-top: 32px solid #f7c948;
-      filter: drop-shadow(0 2px 6px rgba(247,201,72,0.7));
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-top: 36px solid #f7c948;
+      filter: drop-shadow(0 3px 8px rgba(247,201,72,0.7));
       z-index: 10;
     }
 
     #spinBtn {
       padding: 1rem 3rem;
-      font-size: 1.3rem;
+      font-size: clamp(1.2rem, 5vw, 1.5rem);
       font-weight: bold;
       background: linear-gradient(135deg, #f7c948, #ff6b6b);
       border: none;
@@ -69,16 +82,17 @@
       transition: transform 0.1s, box-shadow 0.1s;
       letter-spacing: 1px;
     }
+
     #spinBtn:hover { transform: scale(1.05); }
     #spinBtn:active { transform: scale(0.97); }
     #spinBtn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
     #result {
       margin-top: 1.5rem;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
       text-align: center;
       min-height: 3rem;
-      max-width: 360px;
+      max-width: 90%;
       padding: 0 1rem;
       color: #f7c948;
       font-style: italic;
@@ -89,8 +103,8 @@
     #redeemBtn {
       display: none;
       margin-top: 1rem;
-      padding: 0.7rem 2rem;
-      font-size: 1rem;
+      padding: 0.8rem 2.5rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
       font-weight: bold;
       background: linear-gradient(135deg, #43e97b, #38f9d7);
       border: none;
@@ -100,9 +114,10 @@
       box-shadow: 0 4px 15px rgba(67,233,123,0.4);
       transition: transform 0.1s;
     }
+
     #redeemBtn:hover { transform: scale(1.05); }
 
-    /* Modal */
+    /* Modal styles (unchanged) */
     #modal {
       display: none;
       position: fixed;
@@ -139,7 +154,6 @@
     .modal-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
     .modal-title { font-size: 1.4rem; font-weight: bold; color: #f7c948; margin-bottom: 0.8rem; }
 
-    /* Image meme */
     #modalMemeImg {
       width: 100%;
       max-height: 220px;
@@ -150,7 +164,6 @@
       border: 2px solid rgba(247,201,72,0.3);
     }
 
-    /* YouTube embed */
     .yt-wrapper {
       display: none;
       position: relative;
@@ -168,7 +181,6 @@
       border: none;
     }
 
-    /* YouTube link button (opens in new tab) */
     #ytLinkBtn {
       display: none;
       margin-bottom: 1rem;
@@ -208,6 +220,7 @@
   </style>
 </head>
 <body>
+
   <canvas class="stars" id="stars"></canvas>
 
   <h1>🎉 Eid Salami 🎉</h1>
@@ -215,7 +228,7 @@
 
   <div class="wheel-container">
     <div class="pointer"></div>
-    <canvas id="wheelCanvas" width="340" height="340"></canvas>
+    <canvas id="wheelCanvas"></canvas>
   </div>
 
   <button id="spinBtn">🎰 SPIN!</button>
@@ -228,16 +241,13 @@
       <div class="modal-title" id="modalTitle"></div>
       <div class="meme-loading" id="memeLoading"></div>
 
-      <!-- Image meme -->
       <img id="modalMemeImg" alt="meme" />
 
-      <!-- YouTube embedded player -->
       <div class="yt-wrapper" id="ytWrapper">
         <iframe id="ytFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
       </div>
 
-      <!-- YouTube open-in-tab button -->
-      <button id="ytLinkBtn" onclick="">▶️ Watch on YouTube</button>
+      <button id="ytLinkBtn">▶️ Watch on YouTube</button>
 
       <div class="modal-msg" id="modalMsg"></div>
       <button id="closeModal">Cry Again 😢</button>
@@ -341,7 +351,7 @@
     ];
 
     // ============================================================
-    //  YOUTUBE HELPER — extract video ID from any YouTube URL
+    //  YOUTUBE HELPER
     // ============================================================
     function getYouTubeID(url) {
       const patterns = [
@@ -358,7 +368,7 @@
     }
 
     // ============================================================
-    //  LOAD MEME/LINK LIST FROM memes/list.json
+    //  LOAD MEME/LINK LIST
     // ============================================================
     let mediaItems = [];
 
@@ -387,18 +397,33 @@
     }
 
     // ============================================================
-    //  WHEEL DRAWING
+    //  WHEEL SETUP (responsive)
     // ============================================================
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
-    const cx = canvas.width / 2, cy = canvas.height / 2, r = cx - 10;
+
+    function resizeCanvas() {
+      const size = Math.min(window.innerWidth * 0.9, 340);
+      canvas.width = size;
+      canvas.height = size;
+      drawWheel(currentAngle);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const r = cx - 20;
     const arc = (2 * Math.PI) / segments.length;
-    let currentAngle = 0, spinning = false;
+    let currentAngle = 0;
+    let spinning = false;
 
     function drawWheel(rotation) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       segments.forEach((seg, i) => {
-        const start = rotation + i * arc, end = start + arc;
+        const start = rotation + i * arc;
+        const end = start + arc;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, r, start, end);
@@ -407,30 +432,32 @@
         ctx.strokeStyle = 'rgba(255,255,255,0.3)';
         ctx.lineWidth = 2;
         ctx.stroke();
+
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(start + arc / 2);
         ctx.textAlign = 'right';
         ctx.fillStyle = 'white';
-        ctx.font = `bold ${seg.zero ? 14 : 12}px Segoe UI`;
-        ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        ctx.shadowBlur = 4;
-        ctx.fillText(seg.label, r - 12, 5);
+        ctx.font = `bold ${seg.zero ? 15 : 13}px Segoe UI`;
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 5;
+        ctx.fillText(seg.label, r - 20, 6);
         ctx.restore();
       });
+
       ctx.beginPath();
-      ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 28, 0, Math.PI * 2);
       ctx.fillStyle = '#1a0a2e';
       ctx.fill();
       ctx.strokeStyle = '#f7c948';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.stroke();
     }
 
     drawWheel(0);
 
     // ============================================================
-    //  SPIN LOGIC
+    //  SPIN LOGIC – FIXED ALIGNMENT
     // ============================================================
     const spinBtn   = document.getElementById('spinBtn');
     const resultDiv = document.getElementById('result');
@@ -449,10 +476,16 @@
         ? zeroIndices[Math.floor(Math.random() * zeroIndices.length)]
         : nonZeroIndices[Math.floor(Math.random() * nonZeroIndices.length)];
 
-      const totalRotation = (Math.PI * 2 * (5 + Math.random() * 5))
-        + (Math.PI * 2 - (chosenIndex * arc + arc / 2)) - Math.PI / 2;
+      // Debug (you can remove this line later)
+      console.log(`Chosen segment: ${chosenIndex} → ${segments[chosenIndex].label}`);
 
-      const duration  = 4000 + Math.random() * 1500;
+      // Fixed rotation calculation
+      // We want the center of the chosen segment to point straight up (under the pointer)
+      const targetAngle = - (chosenIndex * arc + arc / 2) + Math.PI / 2;
+      const extraSpins = 5 + Math.random() * 5;
+      const totalRotation = extraSpins * Math.PI * 2 + targetAngle - currentAngle;
+
+      const duration  = 4000 + Math.random() * 2000;
       const startTime = performance.now();
       const startAngle = currentAngle;
 
@@ -463,8 +496,13 @@
         const progress = Math.min(elapsed / duration, 1);
         currentAngle   = startAngle + totalRotation * easeOut(progress);
         drawWheel(currentAngle);
-        if (progress < 1) { requestAnimationFrame(animate); }
-        else { spinning = false; spinBtn.disabled = false; showResult(chosenIndex); }
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          spinning = false;
+          spinBtn.disabled = false;
+          showResult(chosenIndex);
+        }
       }
 
       requestAnimationFrame(animate);
@@ -483,7 +521,7 @@
     }
 
     // ============================================================
-    //  REDEEM — show meme image OR YouTube
+    //  REDEEM LOGIC (unchanged)
     // ============================================================
     redeemBtn.addEventListener('click', () => {
       const text  = redeemTexts[Math.floor(Math.random() * redeemTexts.length)];
@@ -493,7 +531,6 @@
       document.getElementById('modalTitle').textContent = text.title;
       document.getElementById('modalMsg').textContent   = text.msg;
 
-      // Reset all media elements
       const memeImg   = document.getElementById('modalMemeImg');
       const ytWrapper = document.getElementById('ytWrapper');
       const ytFrame   = document.getElementById('ytFrame');
@@ -508,30 +545,24 @@
 
       if (media) {
         if (media.type === 'image') {
-          // ── Show image/GIF ──
           loading.textContent   = 'Loading your disappointment...';
-          memeImg.style.display = 'none';
           memeImg.onload  = () => { loading.textContent = ''; memeImg.style.display = 'block'; };
           memeImg.onerror = () => { loading.textContent = '(meme failed to load, just like your luck 💀)'; };
           memeImg.src = 'memes/' + media.file;
 
         } else if (media.type === 'youtube') {
-          // ── Embed YouTube OR show open-in-tab button ──
           const videoID = getYouTubeID(media.url);
           if (videoID) {
             if (media.embed === false) {
-              // Open in new tab button
               ytLinkBtn.style.display = 'inline-block';
               ytLinkBtn.onclick = () => window.open(media.url, '_blank');
               ytLinkBtn.textContent = (media.label || '▶️ Watch on YouTube');
             } else {
-              // Embedded player (default)
               ytWrapper.style.display = 'block';
               ytFrame.src = `https://www.youtube.com/embed/${videoID}?autoplay=1&mute=0`;
             }
           }
         } else if (media.type === 'link') {
-          // ── Any other link — open in new tab ──
           ytLinkBtn.style.display = 'inline-block';
           ytLinkBtn.style.background = 'linear-gradient(135deg, #f7c948, #ff6b6b)';
           ytLinkBtn.onclick = () => window.open(media.url, '_blank');
@@ -545,7 +576,6 @@
     });
 
     document.getElementById('closeModal').addEventListener('click', () => {
-      // Stop YouTube video when closing
       document.getElementById('ytFrame').src = '';
       document.getElementById('modal').classList.remove('show');
     });

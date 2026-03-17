@@ -139,6 +139,7 @@
     .modal-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
     .modal-title { font-size: 1.4rem; font-weight: bold; color: #f7c948; margin-bottom: 0.8rem; }
 
+    /* Image meme */
     #modalMemeImg {
       width: 100%;
       max-height: 220px;
@@ -149,6 +150,7 @@
       border: 2px solid rgba(247,201,72,0.3);
     }
 
+    /* YouTube embed */
     .yt-wrapper {
       display: none;
       position: relative;
@@ -166,6 +168,7 @@
       border: none;
     }
 
+    /* YouTube link button (opens in new tab) */
     #ytLinkBtn {
       display: none;
       margin-bottom: 1rem;
@@ -181,6 +184,7 @@
       box-shadow: 0 4px 15px rgba(255,0,0,0.4);
       transition: transform 0.1s;
     }
+    #ytLinkBtn:hover { transform: scale(1.05); }
 
     .modal-msg { font-size: 0.95rem; color: #ccc; line-height: 1.5; margin-bottom: 1.5rem; }
     .meme-loading { color: #aaa; font-size: 0.85rem; margin-bottom: 0.5rem; font-style: italic; }
@@ -208,7 +212,7 @@
 <canvas class="stars" id="stars"></canvas>
 
   <h1>🎉 Eid Salami 🎉</h1>
-  <p class="subtitle">Spin the wheel. Win big. (Or get roasted.)</p>
+  <p class="subtitle">Spin the wheel. Win big. (Spoiler: you won't.)</p>
 
   <div class="wheel-container">
     <div class="pointer"></div>
@@ -224,17 +228,24 @@
       <div class="modal-emoji" id="modalEmoji"></div>
       <div class="modal-title" id="modalTitle"></div>
       <div class="meme-loading" id="memeLoading"></div>
+
       <img id="modalMemeImg" alt="meme" />
+
       <div class="yt-wrapper" id="ytWrapper">
         <iframe id="ytFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
       </div>
-      <button id="ytLinkBtn">▶️ Watch on YouTube</button>
+
+      <button id="ytLinkBtn" onclick="">▶️ Watch on YouTube</button>
+
       <div class="modal-msg" id="modalMsg"></div>
-      <button id="closeModal">Try Again 🔄</button>
+      <button id="closeModal">Cry Again 😢</button>
     </div>
   </div>
 
   <script>
+    // ============================================================
+    //  WHEEL SEGMENTS
+    // ============================================================
     const segments = [
       { label: "0৳",    color: "#e74c3c", zero: true  },
       { label: "10৳",   color: "#3498db", zero: false },
@@ -250,26 +261,93 @@
       { label: "5000৳", color: "#e67e22", zero: false },
     ];
 
+    // ============================================================
+    //  55 SARCASTIC ZERO MESSAGES
+    // ============================================================
     const zeroMessages = [
-      "Zero! Even the wheel is broke this Eid. 💀",
-      "Congratulations! You won the gift of disappointment. 🎉",
-      "0৳ — Go ask your older brother instead. 😂",
-      "Wow, zero! Your luck is actually impressive in a bad way. 👏",
-      "The wheel spoke. It said: 'In your dreams.' 😴",
-      "Zero Taka. But the experience was priceless, right? (No.) 😐",
-      "Plot twist: You got nothing. 📺",
-      "Your bank account is still crying. 0৳. 💸"
+      "Congratulations! You won... nothing. As expected. 🎉",
+      "Zero taka! The universe is aligned with your luck. 🌌",
+      "Wow, zero again! You're a natural at losing. 👏",
+      "0৳ — The only amount your ancestors left for you. 😂",
+      "Shocking result! You got zero. Nobody saw this coming. 😐",
+      "The wheel has spoken. It said: 'Nope.'",
+      "Zero! But hey, at least you have your health... probably. 🏥",
+      "You spun, you lost. Eid Mubarak! 🌙",
+      "The wheel pities you. It gave you zero as a mercy. 🙏",
+      "Zero taka. Your bank account sends its condolences. 💸",
+      "Incredible spin! You successfully won nothing. Bravo. 🎭",
+      "You matched your savings account perfectly. Zero. 📉",
+      "The algorithm was rigged... oh wait, it's just your luck. 💀",
+      "Zero! This app has more money than your winnings. 🤑",
+      "Zero taka. Try again? (It'll still be zero.) 🔄",
+      "Your ancestors are watching. They're shaking their heads. 👴",
+      "Zero. Even the wheel felt bad for you... for 0.3 seconds. ⏱️",
+      "You got 0৳! That's technically infinite percent of nothing. 🧮",
+      "Plot twist: You won zero. Nobody is surprised. 📺",
+      "Zero taka! Collect your prize at the nearest void. 🕳️",
+      "The wheel wanted to give you more. But it also didn't. 🤷",
+      "Zero again? You must be a professional at this. 🏆",
+      "0৳ — Proof that hope is just a scam. 📜",
+      "Congrats! You've successfully wasted everyone's time. 🎊",
+      "Zero. Your Eid salami is in another castle. 🏰",
+      "The wheel respects your consistency. Always zero. 📊",
+      "You got zero! Same as your WiFi signal. 📶",
+      "Zero taka! Call your uncle instead. He might help. 📞",
+      "The wheel says: 'Main character? No. Zero character? Yes.' 🎬",
+      "Zero! Even the cricket team scores more. 🏏",
+      "Your spin was beautiful. Your result was not. 🌹",
+      "Zero taka — The most consistent part of your life. 📆",
+      "You asked the wheel for money. The wheel said LOL. 😆",
+      "Zero! At this rate, you'll retire on air. 💨",
+      "The wheel took one look at your luck and chose chaos. 🌀",
+      "Zero. The wheel has judged you and found you... sufficient. 😑",
+      "0৳! Don't worry, money is overrated anyway. (It's not.) 💰",
+      "The wheel: a mirror of your financial future. 🪞",
+      "Zero taka. Your optimism was cute though. 🌸",
+      "You and zero have a very stable relationship. 💑",
+      "Zero! The wheel is honest even when life isn't. 🧿",
+      "Spinning complete. Winning: not complete. 🚫",
+      "Zero taka — your net worth after this spin: unchanged. 😐",
+      "The wheel thought about giving you money. Then it didn't. 🤔",
+      "0৳! You qualified for nothing. Wear it with pride. 🎖️",
+      "Zero. But the real treasure was the friends you... also don't have. 😢",
+      "Another zero. Your luck is impressively bad. 🌟",
+      "The wheel respects your dedication to losing. 🫡",
+      "Zero taka! Your Eid bonus has been deposited... in our hearts. ❤️",
+      "You spun the wheel of destiny. Destiny said no. 🛑",
+      "Zero! On the bright side, you can't lose what you never had. ✨",
+      "The wheel gave you exactly what you deserved. Zero. 🧘",
+      "0৳ — Brought to you by the letter Z and the number 0. 🔤",
+      "Zero taka! Please try again. (Still zero.) 🔁",
+      "Congratulations on participating! That's literally all. 🏅",
     ];
 
+    // ============================================================
+    //  REDEEM TEXT RESPONSES
+    // ============================================================
     const redeemTexts = [
-      { emoji: "😂", title: "Nice Try!", msg: "Transaction failed. Our bank is currently on vacation in Bali." },
-      { emoji: "💀", title: "Error 404", msg: "Money not found. We checked under the sofa, nothing there." },
-      { emoji: "🤣", title: "Wait for it...", msg: "Processing... processing... yeah, you're not getting it. Eid Mubarak! 🌙" },
-      { emoji: "🤡", title: "Access Denied!", msg: "You actually thought it was that easy? You're the real gift here." }
+      { emoji: "😂", title: "Nice Try, Brother!",         msg: "The bank is currently closed. Permanently. For you specifically." },
+      { emoji: "🤣", title: "Redeeming... Please Wait...", msg: "Error 404: Money Not Found. Have you tried crying?" },
+      { emoji: "💀", title: "Transaction Failed!",         msg: "Your request has been reviewed and respectfully yeeted into the void." },
+      { emoji: "🫠", title: "Interesting Strategy!",       msg: "We forwarded your request to our finance team. They laughed." },
+      { emoji: "🙅", title: "Access Denied!",              msg: "This feature is available to winners only. Come back never." },
+      { emoji: "😭", title: "Payment Processing...",       msg: "Just kidding. There's no payment. There never was. Eid Mubarak! 🌙" },
+      { emoji: "🤡", title: "You Actually Clicked It!",    msg: "The real Eid salami was the hope we destroyed along the way." },
+      { emoji: "🎪", title: "Welcome to the Circus!",      msg: "You're the main attraction. Zero is the ringmaster." },
+      { emoji: "🪄", title: "Magic Trick!",                msg: "Watch closely... your money disappeared! (It was never there.)" },
+      { emoji: "📵", title: "Transaction Blocked!",        msg: "Our system detected that you are you. Request rejected automatically." },
     ];
 
+    // ============================================================
+    //  YOUTUBE HELPER — extract video ID from any YouTube URL
+    // ============================================================
     function getYouTubeID(url) {
-      const patterns = [/youtu\.be\/([^?&]+)/, /youtube\.com\/watch\?v=([^&]+)/];
+      const patterns = [
+        /youtu\.be\/([^?&]+)/,
+        /youtube\.com\/watch\?v=([^&]+)/,
+        /youtube\.com\/embed\/([^?&]+)/,
+        /youtube\.com\/shorts\/([^?&]+)/,
+      ];
       for (const p of patterns) {
         const m = url.match(p);
         if (m) return m[1];
@@ -277,25 +355,38 @@
       return null;
     }
 
+    // ============================================================
+    //  LOAD MEME/LINK LIST FROM memes/list.json
+    // ============================================================
     let mediaItems = [];
-    fetch('memes/list.json').then(r => r.json()).then(list => { mediaItems = list; }).catch(() => {});
+
+    fetch('memes/list.json')
+      .then(r => r.json())
+      .then(list => { mediaItems = list; })
+      .catch(() => { mediaItems = []; });
 
     function getRandomMedia() {
-      return mediaItems.length ? mediaItems[Math.floor(Math.random() * mediaItems.length)] : null;
+      if (mediaItems.length === 0) return null;
+      return mediaItems[Math.floor(Math.random() * mediaItems.length)];
     }
 
-    // Canvas Background
+    // ============================================================
+    //  STARS BACKGROUND
+    // ============================================================
     const starsCanvas = document.getElementById('stars');
     const sCtx = starsCanvas.getContext('2d');
     starsCanvas.width = window.innerWidth;
     starsCanvas.height = window.innerHeight;
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 150; i++) {
       sCtx.beginPath();
-      sCtx.arc(Math.random() * starsCanvas.width, Math.random() * starsCanvas.height, 1, 0, Math.PI * 2);
-      sCtx.fillStyle = "rgba(255,255,255,0.5)";
+      sCtx.arc(Math.random() * starsCanvas.width, Math.random() * starsCanvas.height, Math.random() * 2, 0, Math.PI * 2);
+      sCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.7 + 0.1})`;
       sCtx.fill();
     }
 
+    // ============================================================
+    //  WHEEL DRAWING
+    // ============================================================
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const cx = canvas.width / 2, cy = canvas.height / 2, r = cx - 10;
@@ -311,20 +402,35 @@
         ctx.arc(cx, cy, r, start, end);
         ctx.fillStyle = seg.color;
         ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(start + arc / 2);
         ctx.textAlign = 'right';
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 13px Segoe UI';
-        ctx.fillText(seg.label, r - 15, 5);
+        ctx.font = `bold ${seg.zero ? 14 : 12}px Segoe UI`;
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 4;
+        ctx.fillText(seg.label, r - 12, 5);
         ctx.restore();
       });
+      ctx.beginPath();
+      ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a0a2e';
+      ctx.fill();
+      ctx.strokeStyle = '#f7c948';
+      ctx.lineWidth = 3;
+      ctx.stroke();
     }
 
     drawWheel(0);
 
-    const spinBtn = document.getElementById('spinBtn');
+    // ============================================================
+    //  SPIN LOGIC
+    // ============================================================
+    const spinBtn   = document.getElementById('spinBtn');
     const resultDiv = document.getElementById('result');
     const redeemBtn = document.getElementById('redeemBtn');
 
@@ -335,36 +441,50 @@
       redeemBtn.style.display = 'none';
       spinBtn.disabled = true;
 
-      // PROBABILITY: 55% Zero, 45% Prize
-      const zeroIndices = segments.map((s,i) => s.zero ? i : -1).filter(i => i >= 0);
-      const prizeIndices = segments.map((s,i) => !s.zero ? i : -1).filter(i => i >= 0);
-      const chosenIndex = Math.random() < 0.55 
+      // UPDATE: 40% zero, 60% non-zero chance! 
+      const zeroIndices    = segments.map((s,i) => s.zero  ? i : -1).filter(i => i >= 0);
+      const nonZeroIndices = segments.map((s,i) => !s.zero ? i : -1).filter(i => i >= 0);
+      const chosenIndex = Math.random() < 0.40
         ? zeroIndices[Math.floor(Math.random() * zeroIndices.length)]
-        : prizeIndices[Math.floor(Math.random() * prizeIndices.length)];
+        : nonZeroIndices[Math.floor(Math.random() * nonZeroIndices.length)];
 
+      // Angle of the chosen segment's middle
       const segmentMiddle = chosenIndex * arc + arc / 2;
-      let targetAngle = (3 * Math.PI / 2 - segmentMiddle + 2 * Math.PI) % (2 * Math.PI);
-      let delta = (targetAngle - (currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-      
-      const extraSpins = Math.floor(6 + Math.random() * 4);
-      const totalRotation = delta + (2 * Math.PI * extraSpins);
 
-      const duration = 5000;
+      // Target wheel rotation so that segmentMiddle points exactly to the top (angle -PI/2)
+      let targetAngle = (3 * Math.PI / 2 - segmentMiddle + 2 * Math.PI) % (2 * Math.PI);
+
+      // Compute minimal rotation from currentAngle to targetAngle
+      let delta = (targetAngle - currentAngle + 2 * Math.PI) % (2 * Math.PI);
+
+      // Add full 360-degree spins
+      const extraSpins = Math.floor(5 + Math.random() * 5);
+      const fullTurns = 2 * Math.PI * extraSpins;
+      const totalRotation = delta + fullTurns;
+
+      const duration = 4000 + Math.random() * 1500;
       const startTime = performance.now();
       const startAngle = currentAngle;
 
+      function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
       function animate(now) {
-        const progress = Math.min((now - startTime) / duration, 1);
-        const ease = 1 - Math.pow(1 - progress, 4);
-        currentAngle = startAngle + totalRotation * ease;
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        currentAngle = startAngle + totalRotation * easeOut(progress);
         drawWheel(currentAngle);
-        if (progress < 1) requestAnimationFrame(animate);
-        else {
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          // Snap to exact final angle modulo 2PI to avoid floating drift
+          currentAngle = (startAngle + totalRotation) % (2 * Math.PI);
+          drawWheel(currentAngle);
           spinning = false;
           spinBtn.disabled = false;
           showResult(chosenIndex);
         }
       }
+
       requestAnimationFrame(animate);
     });
 
@@ -373,36 +493,78 @@
       resultDiv.style.opacity = 1;
       if (seg.zero) {
         resultDiv.textContent = zeroMessages[Math.floor(Math.random() * zeroMessages.length)];
+        redeemBtn.style.display = 'none';
       } else {
-        resultDiv.textContent = `🤩 You won ${seg.label}!! Lucky you!`;
+        resultDiv.textContent = `🤩 You landed on ${seg.label}!! Want to redeem it?`;
         redeemBtn.style.display = 'inline-block';
       }
     }
 
+    // ============================================================
+    //  REDEEM — show meme image OR YouTube
+    // ============================================================
     redeemBtn.addEventListener('click', () => {
-      const text = redeemTexts[Math.floor(Math.random() * redeemTexts.length)];
+      const text  = redeemTexts[Math.floor(Math.random() * redeemTexts.length)];
       const media = getRandomMedia();
+
       document.getElementById('modalEmoji').textContent = text.emoji;
       document.getElementById('modalTitle').textContent = text.title;
-      document.getElementById('modalMsg').textContent = text.msg;
+      document.getElementById('modalMsg').textContent   = text.msg;
 
-      const memeImg = document.getElementById('modalMemeImg');
+      // Reset all media elements
+      const memeImg   = document.getElementById('modalMemeImg');
       const ytWrapper = document.getElementById('ytWrapper');
-      const loading = document.getElementById('memeLoading');
-      
-      memeImg.style.display = 'none';
-      ytWrapper.style.display = 'none';
+      const ytFrame   = document.getElementById('ytFrame');
+      const ytLinkBtn = document.getElementById('ytLinkBtn');
+      const loading   = document.getElementById('memeLoading');
 
-      if (media && media.type === 'image') {
-        loading.textContent = "Loading your prize...";
-        memeImg.src = 'memes/' + media.file;
-        memeImg.onload = () => { loading.textContent = ""; memeImg.style.display = 'block'; };
+      memeImg.style.display   = 'none';
+      ytWrapper.style.display = 'none';
+      ytLinkBtn.style.display = 'none';
+      loading.textContent     = '';
+      ytFrame.src             = '';
+
+      if (media) {
+        if (media.type === 'image') {
+          // ── Show image/GIF ──
+          loading.textContent   = 'Loading your disappointment...';
+          memeImg.style.display = 'none';
+          memeImg.onload  = () => { loading.textContent = ''; memeImg.style.display = 'block'; };
+          memeImg.onerror = () => { loading.textContent = '(meme failed to load, just like your luck 💀)'; };
+          memeImg.src = 'memes/' + media.file;
+
+        } else if (media.type === 'youtube') {
+          // ── Embed YouTube OR show open-in-tab button ──
+          const videoID = getYouTubeID(media.url);
+          if (videoID) {
+            if (media.embed === false) {
+              // Open in new tab button
+              ytLinkBtn.style.display = 'inline-block';
+              ytLinkBtn.onclick = () => window.open(media.url, '_blank');
+              ytLinkBtn.textContent = (media.label || '▶️ Watch on YouTube');
+            } else {
+              // Embedded player (default)
+              ytWrapper.style.display = 'block';
+              ytFrame.src = `https://www.youtube.com/embed/${videoID}?autoplay=1&mute=0`;
+            }
+          }
+        } else if (media.type === 'link') {
+          // ── Any other link — open in new tab ──
+          ytLinkBtn.style.display = 'inline-block';
+          ytLinkBtn.style.background = 'linear-gradient(135deg, #f7c948, #ff6b6b)';
+          ytLinkBtn.onclick = () => window.open(media.url, '_blank');
+          ytLinkBtn.textContent = (media.label || '🔗 Click to claim your prize!');
+        }
       }
 
       document.getElementById('modal').classList.add('show');
+      redeemBtn.style.display = 'none';
+      resultDiv.textContent   = '💀 You tried to redeem. Big mistake.';
     });
 
     document.getElementById('closeModal').addEventListener('click', () => {
+      // Stop YouTube video when closing
+      document.getElementById('ytFrame').src = '';
       document.getElementById('modal').classList.remove('show');
     });
   </script>

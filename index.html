@@ -428,7 +428,7 @@
     drawWheel(0);
 
     // ============================================================
-    //  SPIN LOGIC (CORRECTED)
+    //  SPIN LOGIC
     // ============================================================
     const spinBtn   = document.getElementById('spinBtn');
     const resultDiv = document.getElementById('result');
@@ -441,10 +441,10 @@
       redeemBtn.style.display = 'none';
       spinBtn.disabled = true;
 
-      // 65% zero, 35% non-zero
+      // UPDATE: 40% zero, 60% non-zero chance! 
       const zeroIndices    = segments.map((s,i) => s.zero  ? i : -1).filter(i => i >= 0);
       const nonZeroIndices = segments.map((s,i) => !s.zero ? i : -1).filter(i => i >= 0);
-      const chosenIndex = Math.random() < 0.65
+      const chosenIndex = Math.random() < 0.40
         ? zeroIndices[Math.floor(Math.random() * zeroIndices.length)]
         : nonZeroIndices[Math.floor(Math.random() * nonZeroIndices.length)];
 
@@ -457,7 +457,7 @@
       // Compute minimal rotation from currentAngle to targetAngle
       let delta = (targetAngle - currentAngle + 2 * Math.PI) % (2 * Math.PI);
 
-      // FIX: Use Math.floor() to ensure we are only adding full 360-degree spins!
+      // Add full 360-degree spins
       const extraSpins = Math.floor(5 + Math.random() * 5);
       const fullTurns = 2 * Math.PI * extraSpins;
       const totalRotation = delta + fullTurns;

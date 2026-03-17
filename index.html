@@ -20,45 +20,53 @@
     }
 
     h1 {
-      font-size: 2.8rem;
+      font-size: 3rem;
       margin-bottom: 0.2rem;
       text-align: center;
       background: linear-gradient(45deg, #f7c948, #ffffff, #f7c948);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(247, 201, 72, 0.3);
+      text-shadow: 0 0 20px rgba(247, 201, 72, 0.4);
     }
 
-    .subtitle { color: #888; margin-bottom: 2rem; font-size: 1rem; text-align: center; max-width: 80%; }
+    .subtitle { 
+      color: #888; 
+      margin-bottom: 2rem; 
+      font-size: 1.1rem; 
+      text-align: center; 
+      max-width: 80%;
+      font-style: italic;
+    }
 
     .wheel-outer {
       position: relative;
-      padding: 12px;
+      padding: 15px;
       background: #222;
       border-radius: 50%;
-      box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.1);
-      border: 4px solid #333;
+      box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 30px rgba(255,255,255,0.05);
+      border: 5px solid #333;
+      transition: transform 0.3s;
     }
 
     .wheel-container { position: relative; width: 340px; height: 340px; }
-    canvas { border-radius: 50%; }
+    canvas { border-radius: 50%; border: 2px solid #444; }
 
     .pointer {
       position: absolute;
       top: -15px; left: 50%;
       transform: translateX(-50%);
       width: 0; height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 35px solid #f7c948;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 38px solid #f7c948;
       filter: drop-shadow(0 0 10px #f7c948);
       z-index: 100;
     }
 
     #spinBtn {
       margin-top: 2rem;
-      padding: 1rem 3rem;
-      font-size: 1.3rem;
+      padding: 1.2rem 3.5rem;
+      font-size: 1.4rem;
       font-weight: 900;
       text-transform: uppercase;
       background: linear-gradient(135deg, #f7c948, #ff6b6b);
@@ -66,56 +74,68 @@
       border-radius: 50px;
       cursor: pointer;
       color: white;
-      box-shadow: 0 5px 20px rgba(247, 201, 72, 0.4);
+      box-shadow: 0 8px 25px rgba(247, 201, 72, 0.4);
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    #spinBtn:hover:not(:disabled) { transform: scale(1.1); }
+    #spinBtn:hover:not(:disabled) { transform: scale(1.1) translateY(-3px); box-shadow: 0 12px 35px rgba(247, 201, 72, 0.6); }
+    #spinBtn:active { transform: scale(0.95); }
     #spinBtn:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
 
     #result {
-      margin-top: 1.2rem;
-      font-size: 1.1rem;
-      font-style: italic;
-      height: 2.5rem;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      height: 3rem;
       text-align: center;
-      color: #f7c948;
-      padding: 0 10px;
+      padding: 0 20px;
     }
 
     #redeemBtn {
       display: none;
-      margin-top: 0.5rem;
-      padding: 0.8rem 2.2rem;
-      background: #43e97b;
+      margin-top: 1rem;
+      padding: 0.8rem 2.5rem;
+      background: #00ffcc;
       color: #000;
-      font-weight: bold;
+      font-weight: 800;
       border: none;
       border-radius: 50px;
       cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       animation: pulse 1.5s infinite;
     }
 
-    .debt-counter { margin-top: 1rem; font-size: 0.8rem; color: #555; }
+    .stats { margin-top: 1.5rem; font-size: 0.85rem; color: #666; font-family: monospace; }
 
-    #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    /* Modal Styling */
+    #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     #modal.show { display: flex; }
-    .modal-box { background: #111; border: 2px solid #f7c948; padding: 2rem; border-radius: 20px; text-align: center; max-width: 420px; width: 100%; box-shadow: 0 0 40px rgba(247,201,72,0.2); }
+    .modal-box { 
+      background: #0a0a0a; 
+      border: 2px solid #f7c948; 
+      padding: 2rem; 
+      border-radius: 25px; 
+      text-align: center; 
+      max-width: 450px; 
+      width: 100%; 
+      box-shadow: 0 0 50px rgba(247,201,72,0.1); 
+    }
     
-    #modalMemeImg { width: 100%; max-height: 250px; object-fit: contain; margin-bottom: 1rem; border-radius: 10px; display: none; }
-    .yt-wrapper { display: none; position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 1rem; border-radius: 10px; overflow: hidden; }
+    #modalMemeImg { width: 100%; max-height: 280px; object-fit: contain; margin-bottom: 1rem; border-radius: 15px; display: none; border: 1px solid #333; }
+    .yt-wrapper { display: none; position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 1rem; border-radius: 15px; overflow: hidden; }
     .yt-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(67, 233, 123, 0); } 100% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0); } }
-    .shake { animation: shake 0.4s ease-in-out; }
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(0, 255, 204, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); } }
+    .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 
-    #closeModal { margin-top: 1rem; padding: 10px 30px; border-radius: 20px; border: none; cursor:pointer; background:#f7c948; font-weight: bold; }
+    #closeModal { margin-top: 1rem; padding: 12px 35px; border-radius: 50px; border: none; cursor:pointer; background:#f7c948; font-weight: 900; color: #000; }
   </style>
 </head>
 <body>
 
   <h1>🎉 EID SALAMI 🎉</h1>
-  <p class="subtitle">Spin the wheel. Win big. (Spoiler: you won't.)</p>
+  <p class="subtitle" id="subText">Where your dreams come to die. Gently.</p>
 
   <div class="wheel-outer" id="mainStage">
     <div class="pointer"></div>
@@ -124,77 +144,79 @@
     </div>
   </div>
 
-  <button id="spinBtn">🎰 SPIN FOR CASH</button>
+  <button id="spinBtn">🎰 DONATE MY LUCK</button>
   <div id="result"></div>
-  <button id="redeemBtn">💰 CLAIM WINNINGS</button>
+  <button id="redeemBtn">💰 COLLECT IMAGINARY CASH</button>
   
-  <p class="debt-counter" id="debtText">Attempts at wealth: 0</p>
+  <div class="stats">
+    NET WORTH INCREASE: <span id="wealth">0</span>৳ | DISAPPOINTMENT LEVEL: <span id="sadness">LOW</span>
+  </div>
 
   <div id="modal">
     <div class="modal-box">
-      <div id="modalEmoji" style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
-      <h2 style="color:#f7c948; margin-bottom: 1rem;" id="modalTitle"></h2>
-      <div id="memeLoading" style="font-size: 0.8rem; color:#888;"></div>
+      <div id="modalEmoji" style="font-size: 4rem; margin-bottom: 1rem;"></div>
+      <h2 style="color:#f7c948; margin-bottom: 1rem; font-size: 1.8rem;" id="modalTitle"></h2>
+      <div id="memeLoading" style="font-size: 0.9rem; color:#f7c948; margin-bottom: 10px; font-weight: bold;"></div>
       <img id="modalMemeImg" alt="meme" />
       <div class="yt-wrapper" id="ytWrapper">
         <iframe id="ytFrame" allow="autoplay; encrypted-media"></iframe>
       </div>
-      <p id="modalMsg" style="margin-bottom: 1.5rem; color: #ccc; font-size: 0.95rem;"></p>
-      <button id="closeModal">Try Again 😢</button>
+      <p id="modalMsg" style="margin-bottom: 2rem; color: #aaa; line-height: 1.6;"></p>
+      <button id="closeModal">ACCEPT DEFEAT</button>
     </div>
   </div>
 
   <script>
     const segments = [
-      { label: "0৳", color: "#e74c3c", zero: true },
-      { label: "10৳", color: "#3498db", zero: false },
-      { label: "0৳", color: "#e74c3c", zero: true },
-      { label: "100৳", color: "#2ecc71", zero: false },
-      { label: "0৳", color: "#e74c3c", zero: true },
-      { label: "500৳", color: "#9b59b6", zero: false },
-      { label: "0৳", color: "#e74c3c", zero: true },
-      { label: "1000৳", color: "#f39c12", zero: false },
-      { label: "0৳", color: "#e74c3c", zero: true },
-      { label: "50৳", color: "#1abc9c", zero: false },
-      { label: "0৳", color: "#e74c3c", zero: true },
-      { label: "5000৳", color: "#e67e22", zero: false },
+      { label: "0৳", color: "#d00000", zero: true },
+      { label: "10৳", color: "#0077b6", zero: false },
+      { label: "0৳", color: "#d00000", zero: true },
+      { label: "100৳", color: "#2d6a4f", zero: false },
+      { label: "0৳", color: "#d00000", zero: true },
+      { label: "500৳", color: "#5a189a", zero: false },
+      { label: "0৳", color: "#d00000", zero: true },
+      { label: "1000৳", color: "#e85d04", zero: false },
+      { label: "0৳", color: "#d00000", zero: true },
+      { label: "50৳", color: "#00b4d8", zero: false },
+      { label: "0৳", color: "#d00000", zero: true },
+      { label: "5000৳", color: "#ffb703", zero: false },
+    ];
+
+    const roasts = [
+      "Still trying? That's cute.",
+      "Your electricity bill is now higher than your winnings.",
+      "Checking your luck... Status: Not Found.",
+      "Maybe the wheel just doesn't like your face?",
+      "Go study. It's more profitable than this.",
+      "Even a broken clock is right twice. You? Not so much.",
+      "You're making the '0' segment feel very popular."
     ];
 
     const zeroMessages = [
-      "Congratulations! You won... nothing. As expected. 🎉",
-      "0৳ — The only amount your ancestors left for you. 😂",
-      "Wow, zero again! You're a natural at losing. 👏",
-      "The wheel has spoken. It said: 'Nope.' 🛑",
-      "Zero! Even the cricket team scores more than you. 🏏",
-      "Shocking result! You got zero. Nobody saw this coming. 😐",
-      "Your bank account sends its condolences. 📉",
-      "0৳! Technically, that's an infinite percentage of your worth. 🧮",
-      "The wheel respect your consistency. Always zero. 🫡",
-      "Zero taka! Collect your prize at the nearest void. 🕳️",
-      "Plot twist: You won zero. Nobody is surprised. 📺",
-      "You got 0৳! Same as your WiFi signal. 📶",
-      "The wheel: a perfect mirror of your financial future. 🪞",
+      "0৳ — Your bank account called. It's laughing. 😂",
+      "Congratulations! You won a whole lot of nothing. 🎉",
+      "Zero. Match made in heaven with your wallet. 👏",
+      "The wheel has spoken. It said: 'Please stop.' 🛑",
+      "Wow, a zero! You're consistently failing. Remarkable. 🫡",
+      "0৳! Technically, that's an infinite percentage of your net worth. 🧮",
+      "The wheel: A mirror of your financial future. 🪞",
       "Zero! Even the wheel is broke this Eid. 💀",
-      "Congratulations on participating! That's literally all. 🏅",
-      "The wheel wanted to give you more. But it also didn't. 🤷"
+      "Congratulations on participating! That's it. No prize. 🏅",
+      "Plot twist: You got zero. Shocking. 😐",
+      "0৳! Go ask your younger cousin for a loan. 👶",
+      "The wheel is honest even when your relatives aren't. 🧿"
     ];
 
     const redeemTexts = [
-      { emoji: "😂", title: "Nice Try, Brother!", msg: "The bank is currently closed. Permanently. For you specifically." },
-      { emoji: "🤣", title: "Redeeming...", msg: "Error 404: Money Not Found. Have you tried crying?" },
-      { emoji: "💀", title: "Transaction Failed!", msg: "Your request has been reviewed and respectfully yeeted into the void." },
-      { emoji: "🫠", title: "Interesting Strategy!", msg: "We forwarded your request to our finance team. They laughed." },
-      { emoji: "🙅", title: "Access Denied!", msg: "This feature is available to winners only. Come back never." },
-      { emoji: "😭", title: "Payment Processing...", msg: "Just kidding. There's no payment. There never was. Eid Mubarak! 🌙" },
-      { emoji: "🤡", title: "You Actually Clicked It!", msg: "The real Eid salami was the hope we destroyed along the way." },
-      { emoji: "🪄", title: "Magic Trick!", msg: "Watch closely... your money disappeared! (It was never there.)" },
-      { emoji: "📵", title: "Transaction Blocked!", msg: "Our system detected that you are you. Request rejected automatically." },
-      { emoji: "🎪", title: "Welcome to the Circus!", msg: "You're the main attraction. Zero is the ringmaster." },
-      { emoji: "🏝️", title: "Vacation Time!", msg: "The money has taken a vacation to a Swiss bank account. Not yours." },
-      { emoji: "🧟", title: "Dead End!", msg: "This button is just here for decoration. Like your degree." },
-      { emoji: "📉", title: "Inflation Alert!", msg: "Your winnings just lost 100% value while you were clicking." },
-      { emoji: "👻", title: "Ghosted!", msg: "The server saw your face and decided to stop responding." },
-      { emoji: "🤫", title: "Shhh...", msg: "Don't tell anyone you won. Because you didn't." }
+      { emoji: "🤡", title: "Honk Honk!", msg: "You actually thought we had money? We're an AI, we live on electricity and your tears." },
+      { emoji: "💀", title: "Transaction Yeeted!", msg: "Your request has been reviewed and respectfully thrown into the sun." },
+      { emoji: "🤣", title: "Processing...", msg: "Error 404: Salami not found. Have you tried being born into a richer family?" },
+      { emoji: "📵", title: "Signal Lost!", msg: "Your internet is too poor to receive wealth. Go sit near the router." },
+      { emoji: "🪄", title: "Magic!", msg: "Watch closely... your prize just vanished into thin air! Amazing!" },
+      { emoji: "😭", title: "Payment Failed!", msg: "We tried to send it, but your bank said: 'Who is this beggar?'" },
+      { emoji: "👻", title: "Ghosted!", msg: "The server saw your profile picture and decided to stop responding." },
+      { emoji: "🧟", title: "Dead End!", msg: "This button is purely decorative. Like your gym membership." },
+      { emoji: "🤫", title: "Top Secret!", msg: "You won! But it's a secret so we can't actually give it to you." }
     ];
 
     let spinCount = 0;
@@ -220,10 +242,18 @@
         ctx.rotate(ang + arc/2);
         ctx.textAlign = "right";
         ctx.fillStyle = "white";
-        ctx.font = "bold 14px Arial";
+        ctx.font = "900 15px Arial";
         ctx.fillText(s.label, 155, 5);
         ctx.restore();
       });
+      // Center Circle
+      ctx.beginPath();
+      ctx.arc(170,170,15,0,Math.PI*2);
+      ctx.fillStyle = "#222";
+      ctx.fill();
+      ctx.strokeStyle = "#f7c948";
+      ctx.lineWidth = 3;
+      ctx.stroke();
     }
 
     drawWheel();
@@ -233,22 +263,25 @@
       this.disabled = true;
       document.getElementById('result').textContent = "";
       document.getElementById('redeemBtn').style.display = "none";
-      document.getElementById('debtText').textContent = `Attempts at wealth: ${spinCount}`;
+      document.getElementById('subText').textContent = roasts[spinCount % roasts.length];
+      document.getElementById('sadness').textContent = spinCount > 5 ? "MAXIMUM" : "MEDIUM";
 
+      // 55% Zero Probability
       const isZero = Math.random() < 0.55; 
       const pool = segments.map((s,i) => s.zero === isZero ? i : -1).filter(i => i !== -1);
       const chosen = pool[Math.floor(Math.random() * pool.length)];
 
-      const offset = isZero ? (Math.random() < 0.5 ? 0.05 : 0.95) : 0.5;
+      // Near-Miss: Stop on the very edge of a winning segment to be extra mean
+      const offset = isZero ? (Math.random() < 0.5 ? 0.02 : 0.98) : 0.5;
       const targetRot = (3 * Math.PI / 2) - (chosen * arc + (arc * offset));
-      const finalRot = targetRot + (Math.PI * 2 * 9);
+      const finalRot = targetRot + (Math.PI * 2 * 10);
 
       const start = performance.now();
       const duration = 5000;
 
       function frame(now) {
         const p = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 4);
+        const ease = 1 - Math.pow(1 - p, 5); // extra smooth ease
         currentAngle = ease * finalRot;
         drawWheel();
         if (p < 1) requestAnimationFrame(frame);
@@ -257,12 +290,12 @@
           const res = segments[chosen];
           if (res.zero) {
             document.getElementById('mainStage').classList.add('shake');
-            setTimeout(() => document.getElementById('mainStage').classList.remove('shake'), 400);
+            setTimeout(() => document.getElementById('mainStage').classList.remove('shake'), 500);
             document.getElementById('result').textContent = zeroMessages[Math.floor(Math.random() * zeroMessages.length)];
             document.getElementById('result').style.color = "#ff6b6b";
           } else {
-            document.getElementById('result').textContent = `🤩 You won ${res.label}!! Lucky you!`;
-            document.getElementById('result').style.color = "#43e97b";
+            document.getElementById('result').textContent = `🔥 LANDED ON ${res.label}! 🔥`;
+            document.getElementById('result').style.color = "#00ffcc";
             document.getElementById('redeemBtn').style.display = "inline-block";
           }
         }
@@ -288,7 +321,7 @@
 
       if (media) {
         if (media.type === 'image') {
-          loading.textContent = "Fetching your disappointment...";
+          loading.textContent = "GENREATING DISAPPOINTMENT...";
           img.src = 'memes/' + media.file;
           img.onload = () => { loading.textContent = ""; img.style.display = 'block'; };
         } else if (media.type === 'youtube') {

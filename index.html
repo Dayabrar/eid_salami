@@ -6,7 +6,6 @@
   <title>Eid Salami 🎉</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: linear-gradient(135deg, #1a0a2e, #16213e, #0f3460);
       min-height: 100vh;
@@ -18,7 +17,6 @@
       color: white;
       overflow: hidden;
     }
-
     h1 {
       font-size: clamp(2rem, 7vw, 3.5rem);
       margin-bottom: 0.3rem;
@@ -28,107 +26,33 @@
       -webkit-text-fill-color: transparent;
       animation: shimmer 2s infinite;
     }
+    @keyframes shimmer { 0%,100% {filter:brightness(1);} 50% {filter:brightness(1.4);} }
+    .subtitle { color:#aaa; margin-bottom:1.5rem; font-size:clamp(1rem,4vw,1.2rem); text-align:center; }
+    .wheel-container { position:relative; width:min(90vw,340px); aspect-ratio:1/1; margin-bottom:1.5rem; }
+    canvas { border-radius:50%; box-shadow:0 0 40px rgba(247,201,72,0.4); width:100%; height:100%; }
+    .pointer { position:absolute; top:-20px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent; border-top:36px solid #f7c948; filter:drop-shadow(0 3px 8px rgba(247,201,72,0.7)); z-index:10; }
+    #spinBtn { padding:1rem 3rem; font-size:clamp(1.2rem,5vw,1.5rem); font-weight:bold; background:linear-gradient(135deg,#f7c948,#ff6b6b); border:none; border-radius:50px; cursor:pointer; color:white; box-shadow:0 6px 25px rgba(247,201,72,0.4); }
+    #spinBtn:hover { transform:scale(1.05); }
+    #spinBtn:disabled { opacity:0.5; cursor:not-allowed; }
+    #result { margin-top:1.5rem; font-size:clamp(1rem,4vw,1.2rem); text-align:center; min-height:3rem; max-width:90%; padding:0 1rem; color:#f7c948; font-style:italic; opacity:0; transition:opacity 0.5s; }
+    #redeemBtn { display:none; margin-top:1rem; padding:0.8rem 2.5rem; font-size:clamp(1rem,4vw,1.2rem); font-weight:bold; background:linear-gradient(135deg,#43e97b,#38f9d7); border:none; border-radius:50px; cursor:pointer; color:#111; box-shadow:0 4px 15px rgba(67,233,123,0.4); }
+    #redeemBtn:hover { transform:scale(1.05); }
 
-    @keyframes shimmer {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.4); }
-    }
-
-    .subtitle {
-      color: #aaa;
-      margin-bottom: 1.5rem;
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      text-align: center;
-    }
-
-    .wheel-container {
-      position: relative;
-      width: min(90vw, 340px);
-      aspect-ratio: 1 / 1;
-      margin-bottom: 1.5rem;
-    }
-
-    canvas {
-      border-radius: 50%;
-      box-shadow: 0 0 40px rgba(247,201,72,0.4);
-      width: 100%;
-      height: 100%;
-    }
-
-    .pointer {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; height: 0;
-      border-left: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-top: 36px solid #f7c948;
-      filter: drop-shadow(0 3px 8px rgba(247,201,72,0.7));
-      z-index: 10;
-    }
-
-    #spinBtn {
-      padding: 1rem 3rem;
-      font-size: clamp(1.2rem, 5vw, 1.5rem);
-      font-weight: bold;
-      background: linear-gradient(135deg, #f7c948, #ff6b6b);
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      color: white;
-      box-shadow: 0 6px 25px rgba(247,201,72,0.4);
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-
-    #spinBtn:hover { transform: scale(1.05); }
-    #spinBtn:active { transform: scale(0.97); }
-    #spinBtn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    #result {
-      margin-top: 1.5rem;
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      text-align: center;
-      min-height: 3rem;
-      max-width: 90%;
-      padding: 0 1rem;
-      color: #f7c948;
-      font-style: italic;
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-
-    #redeemBtn {
-      display: none;
-      margin-top: 1rem;
-      padding: 0.8rem 2.5rem;
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      font-weight: bold;
-      background: linear-gradient(135deg, #43e97b, #38f9d7);
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      color: #111;
-      box-shadow: 0 4px 15px rgba(67,233,123,0.4);
-    }
-
-    #redeemBtn:hover { transform: scale(1.05); }
-
-    /* Modal */
-    #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: center; justify-content: center; flex-direction: column; padding: 1rem; }
-    #modal.show { display: flex; }
-    .modal-box { background: linear-gradient(135deg, #1a0a2e, #0f3460); border: 2px solid #f7c948; border-radius: 20px; padding: 2rem 1.5rem; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 0 60px rgba(247,201,72,0.3); animation: popIn 0.4s ease; }
-    @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    .modal-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
-    .modal-title { font-size: 1.4rem; font-weight: bold; color: #f7c948; margin-bottom: 0.8rem; }
-    #modalMemeImg { width: 100%; max-height: 220px; object-fit: contain; border-radius: 12px; margin-bottom: 1rem; display: none; border: 2px solid rgba(247,201,72,0.3); }
-    .yt-wrapper { display: none; position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 1rem; border-radius: 12px; overflow: hidden; border: 2px solid rgba(247,201,72,0.3); }
-    .yt-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-    #ytLinkBtn { display: none; margin-bottom: 1rem; padding: 0.7rem 1.5rem; background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; }
-    .modal-msg { font-size: 0.95rem; color: #ccc; line-height: 1.5; margin-bottom: 1.5rem; }
-    .meme-loading { color: #aaa; font-size: 0.85rem; margin-bottom: 0.5rem; font-style: italic; }
-    #closeModal { padding: 0.6rem 2rem; background: #f7c948; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; color: #111; font-size: 1rem; }
-    .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+    /* Modal (unchanged) */
+    #modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:100; align-items:center; justify-content:center; flex-direction:column; padding:1rem; }
+    #modal.show { display:flex; }
+    .modal-box { background:linear-gradient(135deg,#1a0a2e,#0f3460); border:2px solid #f7c948; border-radius:20px; padding:2rem 1.5rem; max-width:440px; width:100%; text-align:center; box-shadow:0 0 60px rgba(247,201,72,0.3); animation:popIn 0.4s ease; }
+    @keyframes popIn { 0%{transform:scale(0.5);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+    .modal-emoji { font-size:3rem; margin-bottom:0.5rem; }
+    .modal-title { font-size:1.4rem; font-weight:bold; color:#f7c948; margin-bottom:0.8rem; }
+    #modalMemeImg { width:100%; max-height:220px; object-fit:contain; border-radius:12px; margin-bottom:1rem; display:none; border:2px solid rgba(247,201,72,0.3); }
+    .yt-wrapper { display:none; position:relative; width:100%; padding-bottom:56.25%; margin-bottom:1rem; border-radius:12px; overflow:hidden; border:2px solid rgba(247,201,72,0.3); }
+    .yt-wrapper iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+    #ytLinkBtn { display:none; margin-bottom:1rem; padding:0.7rem 1.5rem; background:linear-gradient(135deg,#ff0000,#cc0000); color:white; border:none; border-radius:50px; font-size:1rem; font-weight:bold; cursor:pointer; }
+    .modal-msg { font-size:0.95rem; color:#ccc; line-height:1.5; margin-bottom:1.5rem; }
+    .meme-loading { color:#aaa; font-size:0.85rem; margin-bottom:0.5rem; font-style:italic; }
+    #closeModal { padding:0.6rem 2rem; background:#f7c948; border:none; border-radius:50px; font-weight:bold; cursor:pointer; color:#111; font-size:1rem; }
+    .stars { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
   </style>
 </head>
 <body>
@@ -152,22 +76,15 @@
       <div class="modal-emoji" id="modalEmoji"></div>
       <div class="modal-title" id="modalTitle"></div>
       <div class="meme-loading" id="memeLoading"></div>
-
       <img id="modalMemeImg" alt="meme" />
-
-      <div class="yt-wrapper" id="ytWrapper">
-        <iframe id="ytFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-      </div>
-
+      <div class="yt-wrapper" id="ytWrapper"><iframe id="ytFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe></div>
       <button id="ytLinkBtn">▶️ Watch on YouTube</button>
-
       <div class="modal-msg" id="modalMsg"></div>
       <button id="closeModal">Cry Again 😢</button>
     </div>
   </div>
 
   <script>
-    // WHEEL SEGMENTS
     const segments = [
       { label: "0৳",    color: "#e74c3c", zero: true  },
       { label: "10৳",   color: "#3498db", zero: false },
@@ -180,42 +97,11 @@
       { label: "0৳",    color: "#e74c3c", zero: true  },
       { label: "50৳",   color: "#1abc9c", zero: false },
       { label: "0৳",    color: "#e74c3c", zero: true  },
-      { label: "5000৳", color: "#e67e22", zero: false },
+      { label: "5000৳", color: "#e67e22", zero: false }
     ];
 
-    // ZERO MESSAGES (all 55)
-    const zeroMessages = [
-      "Congratulations! You won... nothing. As expected. 🎉","Zero taka! The universe is aligned with your luck. 🌌",
-      "Wow, zero again! You're a natural at losing. 👏","0৳ — The only amount your ancestors left for you. 😂",
-      "Shocking result! You got zero. Nobody saw this coming. 😐","The wheel has spoken. It said: 'Nope.'",
-      "Zero! But hey, at least you have your health... probably. 🏥","You spun, you lost. Eid Mubarak! 🌙",
-      "The wheel pities you. It gave you zero as a mercy. 🙏","Zero taka. Your bank account sends its condolences. 💸",
-      "Incredible spin! You successfully won nothing. Bravo. 🎭","You matched your savings account perfectly. Zero. 📉",
-      "The algorithm was rigged... oh wait, it's just your luck. 💀","Zero! This app has more money than your winnings. 🤑",
-      "Zero taka. Try again? (It'll still be zero.) 🔄","Your ancestors are watching. They're shaking their heads. 👴",
-      "Zero. Even the wheel felt bad for you... for 0.3 seconds. ⏱️","You got 0৳! That's technically infinite percent of nothing. 🧮",
-      "Plot twist: You won zero. Nobody is surprised. 📺","Zero taka! Collect your prize at the nearest void. 🕳️",
-      "The wheel wanted to give you more. But it also didn't. 🤷","Zero again? You must be a professional at this. 🏆",
-      "0৳ — Proof that hope is just a scam. 📜","Congrats! You've successfully wasted everyone's time. 🎊",
-      "Zero. Your Eid salami is in another castle. 🏰","The wheel respects your consistency. Always zero. 📊",
-      "You got zero! Same as your WiFi signal. 📶","Zero taka! Call your uncle instead. He might help. 📞",
-      "The wheel says: 'Main character? No. Zero character? Yes.' 🎬","Zero! Even the cricket team scores more. 🏏",
-      "Your spin was beautiful. Your result was not. 🌹","Zero taka — The most consistent part of your life. 📆",
-      "You asked the wheel for money. The wheel said LOL. 😆","Zero! At this rate, you'll retire on air. 💨",
-      "The wheel took one look at your luck and chose chaos. 🌀","Zero. The wheel has judged you and found you... sufficient. 😑",
-      "0৳! Don't worry, money is overrated anyway. (It's not.) 💰","The wheel: a mirror of your financial future. 🪞",
-      "Zero taka. Your optimism was cute though. 🌸","You and zero have a very stable relationship. 💑",
-      "Zero! The wheel is honest even when life isn't. 🧿","Spinning complete. Winning: not complete. 🚫",
-      "Zero taka — your net worth after this spin: unchanged. 😐","The wheel thought about giving you money. Then it didn't. 🤔",
-      "0৳! You qualified for nothing. Wear it with pride. 🎖️","Zero. But the real treasure was the friends you... also don't have. 😢",
-      "Another zero. Your luck is impressively bad. 🌟","The wheel respects your dedication to losing. 🫡",
-      "Zero taka! Your Eid bonus has been deposited... in our hearts. ❤️","You spun the wheel of destiny. Destiny said no. 🛑",
-      "Zero! On the bright side, you can't lose what you never had. ✨","The wheel gave you exactly what you deserved. Zero. 🧘",
-      "0৳ — Brought to you by the letter Z and the number 0. 🔤","Zero taka! Please try again. (Still zero.) 🔁",
-      "Congratulations on participating! That's literally all. 🏅"
-    ];
+    const zeroMessages = [ /* your 55 messages */ "Congratulations! You won... nothing. As expected. 🎉","Zero taka! The universe is aligned with your luck. 🌌","Wow, zero again! You're a natural at losing. 👏","0৳ — The only amount your ancestors left for you. 😂","Shocking result! You got zero. Nobody saw this coming. 😐","The wheel has spoken. It said: 'Nope.'","Zero! But hey, at least you have your health... probably. 🏥","You spun, you lost. Eid Mubarak! 🌙","The wheel pities you. It gave you zero as a mercy. 🙏","Zero taka. Your bank account sends its condolences. 💸","Incredible spin! You successfully won nothing. Bravo. 🎭","You matched your savings account perfectly. Zero. 📉","The algorithm was rigged... oh wait, it's just your luck. 💀","Zero! This app has more money than your winnings. 🤑","Zero taka. Try again? (It'll still be zero.) 🔄","Your ancestors are watching. They're shaking their heads. 👴","Zero. Even the wheel felt bad for you... for 0.3 seconds. ⏱️","You got 0৳! That's technically infinite percent of nothing. 🧮","Plot twist: You won zero. Nobody is surprised. 📺","Zero taka! Collect your prize at the nearest void. 🕳️","The wheel wanted to give you more. But it also didn't. 🤷","Zero again? You must be a professional at this. 🏆","0৳ — Proof that hope is just a scam. 📜","Congrats! You've successfully wasted everyone's time. 🎊","Zero. Your Eid salami is in another castle. 🏰","The wheel respects your consistency. Always zero. 📊","You got zero! Same as your WiFi signal. 📶","Zero taka! Call your uncle instead. He might help. 📞","The wheel says: 'Main character? No. Zero character? Yes.' 🎬","Zero! Even the cricket team scores more. 🏏","Your spin was beautiful. Your result was not. 🌹","Zero taka — The most consistent part of your life. 📆","You asked the wheel for money. The wheel said LOL. 😆","Zero! At this rate, you'll retire on air. 💨","The wheel took one look at your luck and chose chaos. 🌀","Zero. The wheel has judged you and found you... sufficient. 😑","0৳! Don't worry, money is overrated anyway. (It's not.) 💰","The wheel: a mirror of your financial future. 🪞","Zero taka. Your optimism was cute though. 🌸","You and zero have a very stable relationship. 💑","Zero! The wheel is honest even when life isn't. 🧿","Spinning complete. Winning: not complete. 🚫","Zero taka — your net worth after this spin: unchanged. 😐","The wheel thought about giving you money. Then it didn't. 🤔","0৳! You qualified for nothing. Wear it with pride. 🎖️","Zero. But the real treasure was the friends you... also don't have. 😢","Another zero. Your luck is impressively bad. 🌟","The wheel respects your dedication to losing. 🫡","Zero taka! Your Eid bonus has been deposited... in our hearts. ❤️","You spun the wheel of destiny. Destiny said no. 🛑","Zero! On the bright side, you can't lose what you never had. ✨","The wheel gave you exactly what you deserved. Zero. 🧘","0৳ — Brought to you by the letter Z and the number 0. 🔤","Zero taka! Please try again. (Still zero.) 🔁","Congratulations on participating! That's literally all. 🏅" ];
 
-    // REDEEM TEXTS
     const redeemTexts = [
       { emoji: "😂", title: "Nice Try, Brother!", msg: "The bank is currently closed. Permanently. For you specifically." },
       { emoji: "🤣", title: "Redeeming... Please Wait...", msg: "Error 404: Money Not Found. Have you tried crying?" },
@@ -230,19 +116,16 @@
     ];
 
     function getYouTubeID(url) {
-      const patterns = [/youtu\.be\/([^?&]+)/, /youtube\.com\/watch\?v=([^&]+)/, /youtube\.com\/embed\/([^?&]+)/, /youtube\.com\/shorts\/([^?&]+)/];
-      for (const p of patterns) {
-        const m = url.match(p);
-        if (m) return m[1];
-      }
+      const patterns = [/youtu\.be\/([^?&]+)/,/youtube\.com\/watch\?v=([^&]+)/,/youtube\.com\/embed\/([^?&]+)/,/youtube\.com\/shorts\/([^?&]+)/];
+      for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
       return null;
     }
 
     let mediaItems = [];
-    fetch('memes/list.json').then(r => r.json()).then(list => mediaItems = list).catch(() => {});
+    fetch('memes/list.json').then(r=>r.json()).then(list=>mediaItems=list).catch(()=>{});
 
     function getRandomMedia() {
-      return mediaItems.length ? mediaItems[Math.floor(Math.random() * mediaItems.length)] : null;
+      return mediaItems.length ? mediaItems[Math.floor(Math.random()*mediaItems.length)] : null;
     }
 
     // Stars
@@ -250,14 +133,14 @@
     const sCtx = starsCanvas.getContext('2d');
     starsCanvas.width = window.innerWidth;
     starsCanvas.height = window.innerHeight;
-    for (let i = 0; i < 150; i++) {
+    for (let i=0; i<150; i++) {
       sCtx.beginPath();
-      sCtx.arc(Math.random() * starsCanvas.width, Math.random() * starsCanvas.height, Math.random() * 2, 0, Math.PI * 2);
-      sCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.7 + 0.1})`;
+      sCtx.arc(Math.random()*starsCanvas.width, Math.random()*starsCanvas.height, Math.random()*2, 0, Math.PI*2);
+      sCtx.fillStyle = `rgba(255,255,255,${Math.random()*0.7+0.1})`;
       sCtx.fill();
     }
 
-    // CANVAS (fixed)
+    // Canvas
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     let currentAngle = 0;
@@ -265,39 +148,31 @@
 
     function drawWheel(rotation) {
       const size = canvas.width;
-      const cx = size / 2;
-      const cy = size / 2;
-      const r = cx - 20;
-      const arc = (2 * Math.PI) / segments.length;
-
-      ctx.clearRect(0, 0, size, size);
-
-      segments.forEach((seg, i) => {
-        const start = rotation + i * arc;
-        const end = start + arc;
+      const cx = size/2, cy = size/2, r = cx-20;
+      const arc = (2*Math.PI)/segments.length;
+      ctx.clearRect(0,0,size,size);
+      segments.forEach((seg,i)=>{
+        const start = rotation + i*arc;
         ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, r, start, end);
+        ctx.moveTo(cx,cy);
+        ctx.arc(cx,cy,r,start,start+arc);
         ctx.fillStyle = seg.color;
         ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,0.3)';
         ctx.lineWidth = 2;
         ctx.stroke();
-
         ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(start + arc / 2);
+        ctx.translate(cx,cy);
+        ctx.rotate(start + arc/2);
         ctx.textAlign = 'right';
         ctx.fillStyle = 'white';
-        ctx.font = `bold ${seg.zero ? 15 : 13}px Segoe UI`;
-        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.font = `bold ${seg.zero?15:13}px Segoe UI`;
         ctx.shadowBlur = 5;
-        ctx.fillText(seg.label, r - 20, 6);
+        ctx.fillText(seg.label, r-20, 6);
         ctx.restore();
       });
-
       ctx.beginPath();
-      ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+      ctx.arc(cx,cy,28,0,Math.PI*2);
       ctx.fillStyle = '#1a0a2e';
       ctx.fill();
       ctx.strokeStyle = '#f7c948';
@@ -306,16 +181,14 @@
     }
 
     function resizeCanvas() {
-      const size = Math.min(window.innerWidth * 0.9, 340);
-      canvas.width = size;
-      canvas.height = size;
+      const size = Math.min(window.innerWidth*0.9, 340);
+      canvas.width = canvas.height = size;
       drawWheel(currentAngle);
     }
-
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // SPIN
+    // Spin
     const spinBtn = document.getElementById('spinBtn');
     const resultDiv = document.getElementById('result');
     const redeemBtn = document.getElementById('redeemBtn');
@@ -327,29 +200,29 @@
       redeemBtn.style.display = 'none';
       spinBtn.disabled = true;
 
-      const zeroIndices = segments.map((s,i) => s.zero ? i : -1).filter(i => i >= 0);
-      const nonZeroIndices = segments.map((s,i) => !s.zero ? i : -1).filter(i => i >= 0);
-      const chosenIndex = Math.random() < 0.65
-        ? zeroIndices[Math.floor(Math.random() * zeroIndices.length)]
-        : nonZeroIndices[Math.floor(Math.random() * nonZeroIndices.length)];
+      const zeroIndices = segments.map((s,i)=>s.zero?i:-1).filter(i=>i>=0);
+      const nonZeroIndices = segments.map((s,i)=>!s.zero?i:-1).filter(i=>i>=0);
+      const chosenIndex = Math.random()<0.65
+        ? zeroIndices[Math.floor(Math.random()*zeroIndices.length)]
+        : nonZeroIndices[Math.floor(Math.random()*nonZeroIndices.length)];
 
-      const arc = (2 * Math.PI) / segments.length;
-      const targetAngle = -(chosenIndex * arc + arc / 2) + Math.PI / 2;
-      const extraSpins = 5 + Math.random() * 5;
-      const totalRotation = extraSpins * Math.PI * 2 + targetAngle - currentAngle;
+      const arc = (2*Math.PI)/segments.length;
+      const targetAngle = -(chosenIndex*arc + arc/2) + Math.PI/2;
+      const extraSpins = 5 + Math.random()*5;
+      const totalRotation = extraSpins*Math.PI*2 + targetAngle - currentAngle;
 
-      const duration = 4000 + Math.random() * 2000;
+      const duration = 4000 + Math.random()*2000;
       const startTime = performance.now();
       const startAngle = currentAngle;
 
-      function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+      function easeOut(t){return 1-Math.pow(1-t,4);}
 
-      function animate(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        currentAngle = startAngle + totalRotation * easeOut(progress);
+      function animate(now){
+        const elapsed = now-startTime;
+        const progress = Math.min(elapsed/duration,1);
+        currentAngle = startAngle + totalRotation*easeOut(progress);
         drawWheel(currentAngle);
-        if (progress < 1) requestAnimationFrame(animate);
+        if (progress<1) requestAnimationFrame(animate);
         else {
           spinning = false;
           spinBtn.disabled = false;
@@ -363,7 +236,7 @@
       const seg = segments[index];
       resultDiv.style.opacity = 1;
       if (seg.zero) {
-        resultDiv.textContent = zeroMessages[Math.floor(Math.random() * zeroMessages.length)];
+        resultDiv.textContent = zeroMessages[Math.floor(Math.random()*zeroMessages.length)];
         redeemBtn.style.display = 'none';
       } else {
         resultDiv.textContent = `🤩 You landed on ${seg.label}!! Want to redeem it?`;
@@ -371,11 +244,10 @@
       }
     }
 
-    // REDEEM
+    // Redeem modal
     redeemBtn.addEventListener('click', () => {
-      const text = redeemTexts[Math.floor(Math.random() * redeemTexts.length)];
+      const text = redeemTexts[Math.floor(Math.random()*redeemTexts.length)];
       const media = getRandomMedia();
-
       document.getElementById('modalEmoji').textContent = text.emoji;
       document.getElementById('modalTitle').textContent = text.title;
       document.getElementById('modalMsg').textContent = text.msg;
@@ -386,35 +258,26 @@
       const ytLinkBtn = document.getElementById('ytLinkBtn');
       const loading = document.getElementById('memeLoading');
 
-      memeImg.style.display = 'none';
-      ytWrapper.style.display = 'none';
-      ytLinkBtn.style.display = 'none';
+      memeImg.style.display = ytWrapper.style.display = ytLinkBtn.style.display = 'none';
       loading.textContent = '';
       ytFrame.src = '';
 
       if (media) {
         if (media.type === 'image') {
           loading.textContent = 'Loading your disappointment...';
-          memeImg.onload = () => { loading.textContent = ''; memeImg.style.display = 'block'; };
-          memeImg.onerror = () => { loading.textContent = '(meme failed to load, just like your luck 💀)'; };
+          memeImg.onload = () => { loading.textContent=''; memeImg.style.display='block'; };
           memeImg.src = 'memes/' + media.file;
         } else if (media.type === 'youtube') {
           const videoID = getYouTubeID(media.url);
           if (videoID) {
-            if (media.embed === false) {
-              ytLinkBtn.style.display = 'inline-block';
-              ytLinkBtn.onclick = () => window.open(media.url, '_blank');
-            } else {
-              ytWrapper.style.display = 'block';
-              ytFrame.src = `https://www.youtube.com/embed/${videoID}?autoplay=1`;
-            }
+            ytWrapper.style.display = 'block';
+            ytFrame.src = `https://www.youtube.com/embed/${videoID}?autoplay=1`;
           }
         }
       }
 
       document.getElementById('modal').classList.add('show');
       redeemBtn.style.display = 'none';
-      resultDiv.textContent = '💀 You tried to redeem. Big mistake.';
     });
 
     document.getElementById('closeModal').addEventListener('click', () => {

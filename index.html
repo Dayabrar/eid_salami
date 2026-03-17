@@ -105,8 +105,6 @@
       animation: pulse 1.5s infinite;
     }
 
-    .stats { margin-top: 1.5rem; font-size: 0.85rem; color: #666; font-family: monospace; }
-
     /* Modal Styling */
     #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     #modal.show { display: flex; }
@@ -147,10 +145,6 @@
   <button id="spinBtn">🎰 CHECK LUCK</button>
   <div id="result"></div>
   <button id="redeemBtn">💰 COLLECT CASH</button>
-  
-  <div class="stats">
-    NET WORTH INCREASE: <span id="wealth">0</span>৳ | DISAPPOINTMENT LEVEL: <span id="sadness">LOW</span>
-  </div>
 
   <div id="modal">
     <div class="modal-box">
@@ -286,7 +280,6 @@
       document.getElementById('result').textContent = "";
       document.getElementById('redeemBtn').style.display = "none";
       document.getElementById('subText').textContent = roasts[spinCount % roasts.length];
-      document.getElementById('sadness').textContent = spinCount > 5 ? "MAXIMUM" : "MEDIUM";
 
       const isZero = Math.random() < 0.55; 
       const pool = segments.map((s,i) => s.zero === isZero ? i : -1).filter(i => i !== -1);

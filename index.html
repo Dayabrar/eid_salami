@@ -105,6 +105,8 @@
       animation: pulse 1.5s infinite;
     }
 
+    .stats { margin-top: 1.5rem; font-size: 0.85rem; color: #666; font-family: monospace; }
+
     /* Modal Styling */
     #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     #modal.show { display: flex; }
@@ -145,6 +147,10 @@
   <button id="spinBtn">🎰 CHECK LUCK</button>
   <div id="result"></div>
   <button id="redeemBtn">💰 COLLECT CASH</button>
+  
+  <div class="stats">
+    NET WORTH INCREASE: <span id="wealth">0</span>৳ | DISAPPOINTMENT LEVEL: <span id="sadness">LOW</span>
+  </div>
 
   <div id="modal">
     <div class="modal-box">
@@ -178,38 +184,27 @@
 
     const roasts = [
       "Still trying? That's cute.",
-      "Checking your luck... Status: 404 Not Found.",
-      "Electricity is expensive, these clicks aren't free.",
-      "Maybe the wheel just doesn't like your vibe?",
+      "Your electricity bill is now higher than your winnings.",
+      "Checking your luck... Status: Not Found.",
+      "Maybe the wheel just doesn't like your face?",
       "Go study. It's more profitable than this.",
-      "Even a broken clock is right twice. You? Not yet.",
-      "You're making the '0' segment feel very popular.",
-      "Is your finger tired or just your hope?",
-      "Breaking news: Local person expects free money.",
-      "Your patience is impressive. Your luck? Not so much."
+      "Even a broken clock is right twice. You? Not so much.",
+      "You're making the '0' segment feel very popular."
     ];
 
     const zeroMessages = [
       "0৳ — Your bank account called. It's laughing. 😂",
       "Congratulations! You won a whole lot of nothing. 🎉",
-      "Zero. A perfect match for your financial skills. 👏",
-      "The wheel has spoken. It said: 'In your dreams.' 🛑",
+      "Zero. Match made in heaven with your wallet. 👏",
+      "The wheel has spoken. It said: 'Please stop.' 🛑",
       "Wow, a zero! You're consistently failing. Remarkable. 🫡",
-      "0৳! Technically, that's an infinite percentage of your worth. 🧮",
+      "0৳! Technically, that's an infinite percentage of your net worth. 🧮",
       "The wheel: A mirror of your financial future. 🪞",
       "Zero! Even the wheel is broke this Eid. 💀",
-      "Congratulations on participating! That's literally it. 🏅",
+      "Congratulations on participating! That's it. No prize. 🏅",
       "Plot twist: You got zero. Shocking. 😐",
       "0৳! Go ask your younger cousin for a loan. 👶",
-      "The wheel is honest even when your relatives aren't. 🧿",
-      "Zero. The same amount of help you give with Eid shopping. 🛍️",
-      "You won the 'Better Luck Next Year' award early. 🏆",
-      "0৳. Don't spend it all in one place! 💸",
-      "Error: Luck.exe has stopped working. 💻",
-      "Zero Taka. But the experience was... also bad. 🤢",
-      "A rare result: Zero! (Actually, it's very common.) 🤡",
-      "Your luck is like a black hole. Nothing gets out. 🕳️",
-      "Zero. Even the pointer felt sorry for you. 🥺"
+      "The wheel is honest even when your relatives aren't. 🧿"
     ];
 
     const redeemTexts = [
@@ -221,18 +216,7 @@
       { emoji: "😭", title: "Payment Failed!", msg: "We tried to send it, but your bank said: 'Who is this beggar?'" },
       { emoji: "👻", title: "Ghosted!", msg: "The server saw your profile picture and decided to stop responding." },
       { emoji: "🧟", title: "Dead End!", msg: "This button is purely decorative. Like your gym membership." },
-      { emoji: "🤫", title: "Top Secret!", msg: "You won! But it's a secret so we can't actually give it to you." },
-      { emoji: "🚧", title: "Under Construction", msg: "Our 'Giving Money' department hasn't been built yet. Try 2099." },
-      { emoji: "🌋", title: "Eruption!", msg: "The cash vault just fell into a volcano. Extremely bad timing." },
-      { emoji: "⚖️", title: "Tax Audit", msg: "Government took 100% as 'Sarcasm Tax'. You owe US money now." },
-      { emoji: "🧊", title: "Frozen Assets", msg: "Your winnings are currently stored in Antarctica. Go get them." },
-      { emoji: "🎭", title: "Oscar Performance", msg: "And the award for 'Most Gullible User' goes to... YOU!" },
-      { emoji: "🛰️", title: "Satellite Error", msg: "The money was beamed to the wrong planet. Martians say thanks!" },
-      { emoji: "🧺", title: "Laundry Day", msg: "We accidentally washed your money in the machine. It's gone." },
-      { emoji: "🐿️", title: "Stolen!", msg: "A squirrel took the money and ran up a tree. He's rich now." },
-      { emoji: "🪁", title: "Fly Away", msg: "The Taka notes were too light. They just flew away. Oops." },
-      { emoji: "🧯", title: "Fire Drill", msg: "System overheated from your win. Data deleted for safety." },
-      { emoji: "🧩", title: "Puzzle Time", msg: "To unlock the cash, solve this: Why did you think this was real?" }
+      { emoji: "🤫", title: "Top Secret!", msg: "You won! But it's a secret so we can't actually give it to you." }
     ];
 
     let spinCount = 0;
@@ -280,11 +264,14 @@
       document.getElementById('result').textContent = "";
       document.getElementById('redeemBtn').style.display = "none";
       document.getElementById('subText').textContent = roasts[spinCount % roasts.length];
+      document.getElementById('sadness').textContent = spinCount > 5 ? "MAXIMUM" : "MEDIUM";
 
+      // 55% Zero Probability
       const isZero = Math.random() < 0.55; 
       const pool = segments.map((s,i) => s.zero === isZero ? i : -1).filter(i => i !== -1);
       const chosen = pool[Math.floor(Math.random() * pool.length)];
 
+      // Near-Miss: Stop on the very edge of a winning segment to be extra mean
       const offset = isZero ? (Math.random() < 0.5 ? 0.02 : 0.98) : 0.5;
       const targetRot = (3 * Math.PI / 2) - (chosen * arc + (arc * offset));
       const finalRot = targetRot + (Math.PI * 2 * 10);
@@ -294,7 +281,7 @@
 
       function frame(now) {
         const p = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 5); 
+        const ease = 1 - Math.pow(1 - p, 5); // extra smooth ease
         currentAngle = ease * finalRot;
         drawWheel();
         if (p < 1) requestAnimationFrame(frame);
@@ -334,7 +321,7 @@
 
       if (media) {
         if (media.type === 'image') {
-          loading.textContent = "GENERATING DISAPPOINTMENT...";
+          loading.textContent = "GENREATING DISAPPOINTMENT...";
           img.src = 'memes/' + media.file;
           img.onload = () => { loading.textContent = ""; img.style.display = 'block'; };
         } else if (media.type === 'youtube') {
@@ -353,3 +340,4 @@
   </script>
 </body>
 </html>
+Change little just giving you for context
